@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSK Clinic Admin</title>
+    <link rel="icon" type="image/png" href="assets/csk-clinic-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="brand.css?v=20261113-clinic-logo" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-box">
+          <img class="brand-mark" src="assets/csk-clinic-logo.png" alt="CSK Clinic logo" />
+          <div>
+            <div class="brand-name">CSK Clinic</div>
+            <small>Admin Portal</small>
+          </div>
+        </div>
+
+        <nav class="side-nav">
+          <a class="active" href="#overview">Overview</a>
+          <a href="patient_management.html">Patients</a>
+          <a href="appointment_management.html">Appointments</a>
+          <a href="#pharmacy">Pharmacy</a>
+          <a href="#lab">Laboratory</a>
+          <a href="#billing">Billing</a>
+          <a href="#settings">Settings</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar-admin">
+          <div>
+            <p class="kicker">Clinic operations</p>
+            <h1>Administration dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-btn">Export</button>
+            <button class="primary-btn">+ New patient</button>
+          </div>
+        </header>
+
+        <section id="overview" class="panel-block">
+          <div class="stats-grid" id="adminStats"></div>
+        </section>
+
+        <section class="panel-block two-up">
+          <div class="card">
+            <div class="card-head">
+              <h3>Daily appointment trend</h3>
+            </div>
+            <div class="bars" id="adminRevenueChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3>Department load</h3>
+            </div>
+            <div class="bars" id="adminDepartmentChart"></div>
+          </div>
+        </section>
+
+        <section class="panel-block table-panels">
+          <div class="card">
+            <div class="card-head">
+              <h3>Recent appointments</h3>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminAppointments"></tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Patient registry</h3>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Blood</th>
+                </tr>
+              </thead>
+              <tbody id="adminPatients"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel-block three-up">
+          <div class="card">
+            <div class="card-head">
+              <h3>Pharmacy</h3>
+            </div>
+            <div class="metric-list" id="adminPharmacy"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Laboratory</h3>
+            </div>
+            <div class="metric-list" id="adminLab"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Billing</h3>
+            </div>
+            <div class="metric-list" id="adminBilling"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

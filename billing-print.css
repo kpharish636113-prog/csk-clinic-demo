@@ -1,0 +1,314 @@
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+.print-root:empty {
+  display: none;
+}
+
+.print-root:not(:empty) {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  overflow: auto;
+  padding: 72px 20px 30px;
+  background: rgba(15, 32, 51, .58);
+}
+
+.print-root {
+  color: #172b45;
+  font-family: Arial, sans-serif;
+}
+
+.print-invoice {
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .18);
+  max-width: 760px;
+  margin: 0 auto;
+  font-size: 11px;
+}
+
+.print-toolbar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+}
+
+.print-toolbar span {
+  margin-right: auto;
+  color: #53667b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.print-toolbar button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #d5dee7;
+  border-radius: 8px;
+  background: #fff;
+  color: #172b45;
+  font: inherit;
+  cursor: pointer;
+}
+
+.print-toolbar .button-primary {
+  border-color: #0da99b;
+  background: #0da99b;
+  color: #fff;
+}
+
+.print-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #193c58;
+}
+
+.print-head h1 {
+  font-size: 23px;
+}
+
+.print-head p,
+.print-meta p {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.print-title h2 {
+  font-size: 16px;
+  letter-spacing: .04em;
+}
+
+.print-title {
+  text-align: right;
+}
+
+.print-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 18px 0;
+}
+
+.print-meta > div {
+  flex: 1;
+}
+
+.print-patient-name {
+  color: #172b45 !important;
+  font-size: 12px !important;
+  font-weight: 700;
+}
+
+.print-table th,
+.print-table td {
+  padding: 8px;
+  border: 1px solid #dce3e9;
+  font-size: 10px;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.print-table th {
+  background: #f2f5f8;
+}
+
+.print-totals {
+  width: 250px;
+  margin: 18px 0 0 auto;
+}
+
+.print-totals div {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 10px;
+}
+
+.print-totals .grand {
+  border-top: 1px solid #ccd5de;
+  font-weight: 700;
+}
+
+.print-payment-history {
+  margin-top: 20px;
+}
+
+.print-payment-history h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+}
+
+.print-payment-history > p,
+.print-notes {
+  font-size: 10px;
+}
+
+.print-words {
+  margin-top: 14px;
+  padding: 9px;
+  border: 1px solid #dce3e9;
+  font-size: 10px;
+}
+
+.print-signature {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 44px;
+}
+
+.print-signature span {
+  min-width: 180px;
+  padding-top: 7px;
+  border-top: 1px solid #8795a4;
+  text-align: center;
+  font-size: 9px;
+}
+
+.print-footer {
+  margin-top: 40px;
+  padding-top: 12px;
+  border-top: 1px solid #dce3e9;
+  color: #66798c;
+  font-size: 10px;
+}
+
+.template-detailed .print-head {
+  border-bottom-color: #0da99b;
+}
+
+.template-detailed .print-head h1 {
+  color: #0e665f;
+}
+
+.template-detailed .print-meta {
+  padding: 20px 0;
+  border-bottom: 1px solid #e3e9ef;
+}
+
+.template-thermal {
+  page: thermal-receipt;
+  width: 72mm;
+  max-width: 72mm;
+  margin: 0 auto;
+  font-size: 9px;
+}
+
+.template-thermal .print-head {
+  display: block;
+  padding-bottom: 9px;
+  border-bottom: 1px dashed #68798a;
+  text-align: center;
+}
+
+.template-thermal .print-head h1 {
+  font-size: 17px;
+}
+
+.template-thermal .print-title {
+  margin-top: 9px;
+  text-align: center;
+}
+
+.template-thermal .print-title h2 {
+  font-size: 12px;
+}
+
+.template-thermal .print-head p,
+.template-thermal .print-meta p {
+  font-size: 8px;
+}
+
+.template-thermal .print-meta {
+  display: block;
+  padding: 9px 0;
+}
+
+.template-thermal .print-meta > div + div {
+  margin-top: 8px;
+}
+
+.template-thermal .print-table th,
+.template-thermal .print-table td {
+  padding: 5px 3px;
+  font-size: 8px;
+}
+
+.template-thermal .print-totals {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.template-thermal .print-totals div {
+  font-size: 9px;
+}
+
+.template-thermal .print-payment-history {
+  margin-top: 12px;
+}
+
+.template-thermal .print-payment-history h3 {
+  font-size: 10px;
+}
+
+.template-thermal .print-words {
+  font-size: 8px;
+}
+
+.template-thermal .print-signature {
+  margin-top: 25px;
+}
+
+.template-thermal .print-signature span {
+  min-width: 130px;
+  font-size: 8px;
+}
+
+.template-thermal .print-footer {
+  margin-top: 15px;
+  font-size: 8px;
+  text-align: center;
+}
+
+.print-actions {
+  display: none !important;
+}
+
+@media print {
+  .print-root:not(:empty) {
+    position: static;
+    inset: auto;
+    overflow: visible;
+    padding: 0;
+    background: #fff;
+  }
+
+  .print-invoice {
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .print-toolbar {
+    display: none !important;
+  }
+}
+
+@page thermal-receipt {
+  size: 80mm 250mm;
+  margin: 4mm;
+}

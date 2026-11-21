@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSK Clinic - Appointment Management</title>
+    <link rel="icon" type="image/png" href="assets/csk-clinic-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="appointment_management.css" />
+    <link rel="stylesheet" href="brand.css?v=20261113-clinic-logo" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-box">
+          <img class="brand-mark" src="assets/csk-clinic-logo.png" alt="CSK Clinic logo" />
+          <div>
+            <div class="brand-name">CSK Clinic</div>
+            <small>Clinic Scheduler</small>
+          </div>
+        </div>
+
+        <nav class="side-nav">
+          <a href="file_admin.html">Overview</a>
+          <a href="patient_management.html">Patients</a>
+          <a class="active" href="appointment_management.html">Appointments</a>
+          <a href="#consultations">Consultations</a>
+          <a href="#pharmacy">Pharmacy</a>
+          <a href="#lab">Laboratory</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="kicker">Appointment workflow</p>
+            <h1>Appointment management</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-btn">Export</button>
+            <button class="primary-btn">+ New appointment</button>
+          </div>
+        </header>
+
+        <section class="stats-grid" id="appointmentStats"></section>
+
+        <section class="board-grid">
+          <div class="card schedule-card">
+            <div class="card-head">
+              <h3>Doctor schedule</h3>
+              <button class="chip-btn">This week</button>
+            </div>
+            <div class="calendar-panel" id="doctorSchedule"></div>
+          </div>
+
+          <div class="card booking-card">
+            <div class="card-head">
+              <h3>Booking details</h3>
+            </div>
+            <form class="booking-form">
+              <label>
+                Patient name
+                <input type="text" value="Aisha Nair" />
+              </label>
+              <label>
+                Doctor
+                <select>
+                  <option>Dr. Meera Nair</option>
+                  <option>Dr. Rohan Sethi</option>
+                  <option>Dr. Anjali Menon</option>
+                </select>
+              </label>
+              <label>
+                Department
+                <input type="text" value="Cardiology" />
+              </label>
+              <label>
+                Appointment date
+                <input type="date" value="2026-11-15" />
+              </label>
+              <label>
+                Time slot
+                <input type="text" value="10:30 AM" />
+              </label>
+              <label>
+                Visit reason
+                <textarea rows="3">Follow-up consultation for blood pressure review.</textarea>
+              </label>
+              <button type="button" class="primary-btn booking-btn">Confirm booking</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="card table-card">
+          <div class="card-head">
+            <h3>Appointments overview</h3>
+            <button class="chip-btn">Today</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Department</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="appointmentsTable"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script src="appointment_management.js"></script>
+  </body>
+</html>

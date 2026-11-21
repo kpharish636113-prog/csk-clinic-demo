@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSK Clinic - Patient Management</title>
+    <link rel="icon" type="image/png" href="assets/csk-clinic-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="patient_management.css" />
+    <link rel="stylesheet" href="brand.css?v=20261113-clinic-logo" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-box">
+          <img class="brand-mark" src="assets/csk-clinic-logo.png" alt="CSK Clinic logo" />
+          <div>
+            <div class="brand-name">CSK Clinic</div>
+            <small>Patient Portal</small>
+          </div>
+        </div>
+
+        <nav class="side-nav">
+          <a href="file_admin.html">Overview</a>
+          <a class="active" href="patient_management.html">Patients</a>
+          <a href="appointment_management.html">Appointments</a>
+          <a href="#consultations">Consultations</a>
+          <a href="#pharmacy">Pharmacy</a>
+          <a href="#lab">Laboratory</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="kicker">Patient registry</p>
+            <h1>Patient management</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-btn">Export</button>
+            <button class="primary-btn">+ Add patient</button>
+          </div>
+        </header>
+
+        <section class="stats-grid" id="patientStats"></section>
+
+        <section class="toolbar card">
+          <div class="search-box">
+            <span>🔎</span>
+            <input type="text" placeholder="Search patients, ID, mobile, doctor" />
+          </div>
+          <div class="filters">
+            <button class="filter active">All</button>
+            <button class="filter">Active</button>
+            <button class="filter">Follow-up</button>
+            <button class="filter">Critical</button>
+          </div>
+        </section>
+
+        <section class="main-grid">
+          <div class="card table-card">
+            <div class="card-head">
+              <h3>Patient records</h3>
+              <button class="chip-btn">View all</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Age / Gender</th>
+                  <th>Last visit</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="patientTable"></tbody>
+            </table>
+          </div>
+
+          <aside class="side-stack">
+            <div class="card profile-card">
+              <div class="profile-banner"></div>
+              <div class="profile-avatar">AN</div>
+              <div class="profile-meta">
+                <h3>Aisha Nair</h3>
+                <p>Patient ID: CSK-2048</p>
+              </div>
+              <div class="profile-details">
+                <div><span>Last appointment</span><strong>12 Nov 2026</strong></div>
+                <div><span>Blood group</span><strong>O+</strong></div>
+                <div><span>Condition</span><strong>Hypertension</strong></div>
+              </div>
+            </div>
+
+            <div class="card agenda-card">
+              <div class="card-head">
+                <h3>Today's schedule</h3>
+              </div>
+              <ul class="agenda-list" id="scheduleList"></ul>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="patient_management.js"></script>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "name": "csk-clinic",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev:api": "npm run start:dev --workspace @csk-clinic/api",
+    "dev:web": "npm run dev --workspace @csk-clinic/web",
+    "dev:prototype": "python -m http.server 8000",
+    "build": "npm run build --workspace @csk-clinic/api",
+    "build:web": "npm run build --workspace @csk-clinic/web",
+    "db:generate": "npm run prisma:generate --workspace @csk-clinic/api",
+    "db:migrate": "npm run prisma:migrate --workspace @csk-clinic/api",
+    "db:deploy": "npm run prisma:deploy --workspace @csk-clinic/api",
+    "db:seed": "npm run prisma:seed --workspace @csk-clinic/api",
+    "test": "jest --config apps/api/jest.config.cjs",
+    "test:e2e": "playwright test",
+    "lint": "npm run build",
+    "typecheck": "npm run build",
+    "backup": "powershell -ExecutionPolicy Bypass -File ./scripts/backup.ps1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/supertest": "^7.2.1",
+    "@vitejs/plugin-react": "^5.2.0",
+    "jest": "^30.5.2",
+    "supertest": "^7.3.2",
+    "ts-jest": "^29.4.15",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.2.11",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/core": "^11.2.11",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/platform-express": "^11.2.11",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  }
+}

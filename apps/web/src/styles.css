@@ -1,0 +1,16 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.clinic-frame {
+  width: 100%;
+  height: 100vh;
+  display: block;
+  border: 0;
+  background: #fff;
+}

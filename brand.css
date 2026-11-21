@@ -1,0 +1,41 @@
+.brand-mark {
+  object-fit: contain;
+  padding: 2px;
+  background: #fff !important;
+}
+
+.clinic-avatar {
+  object-fit: cover;
+  background: #fff !important;
+}
+
+.print-clinic-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.print-logo {
+  width: 76px;
+  height: 76px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.template-thermal .print-clinic-brand {
+  display: block;
+  text-align: center;
+}
+
+.template-thermal .print-logo {
+  width: 21mm;
+  height: 21mm;
+  margin: 0 auto 5px;
+}
+
+@media print {
+  .print-logo {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

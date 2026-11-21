@@ -1,0 +1,657 @@
+.patient-history-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 10px;
+  border: 1px solid #dcece9;
+  border-radius: 10px;
+  background: #f3faf8;
+}
+
+.patient-history-summary > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 8px;
+  border-right: 1px solid #dbe7e4;
+}
+
+.patient-history-summary > div:last-child {
+  border-right: 0;
+}
+
+.patient-history-summary b {
+  color: #315268;
+  font-size: 10px;
+}
+
+.patient-history-summary small {
+  color: #728a92;
+  font-size: 9px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.patient-clinical-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.patient-clinical-identity {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) minmax(160px, .7fr);
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid #dfe9ef;
+  border-radius: 10px;
+  background: linear-gradient(110deg, #f3faf9, #f8fbfd);
+}
+
+.patient-clinical-avatar {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e0f3ef;
+  color: #09877e;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.patient-clinical-person,
+.patient-clinical-visit {
+  min-width: 0;
+}
+
+.patient-clinical-name {
+  color: #263c55;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.patient-clinical-name > span {
+  margin-left: 5px;
+  color: #728a92;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.patient-clinical-demographics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 5px;
+  color: #6d8093;
+  font-size: 10px;
+}
+
+.patient-clinical-visit {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+}
+
+.patient-clinical-visit small {
+  color: #6d8093;
+  font-size: 9px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+#patientRecordsModal .modal-wide {
+  width: min(1240px, 100%);
+}
+
+.patient-history-column,
+.patient-consultation-column {
+  min-width: 0;
+}
+
+.patient-history-column {
+  position: sticky;
+  top: 0;
+  max-height: calc(100vh - 112px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.patient-history-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 10px;
+  border: 1px solid #e7edf3;
+  border-radius: 9px;
+  background: #fbfcfe;
+}
+
+.patient-history-tools label {
+  display: grid;
+  gap: 5px;
+  color: #5b6d81;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.patient-history-tools input,
+.patient-history-tools select {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #dfe7ef;
+  border-radius: 7px;
+  background: white;
+  color: #263c55;
+  font-size: 10px;
+}
+
+.patient-history-tools .patient-history-search,
+.patient-history-count {
+  grid-column: 1 / -1;
+}
+
+.patient-history-count {
+  margin: 0;
+  color: #728a92;
+  font-size: 10px;
+}
+
+.patient-history-tools .button {
+  min-width: 0;
+  white-space: normal;
+}
+
+.patient-history-tools .button-primary {
+  grid-column: 1 / -1;
+}
+
+.patient-history-tools input:focus,
+.patient-history-tools select:focus {
+  border-color: #159b8c;
+  outline: 3px solid rgb(21 155 140 / 14%);
+}
+
+.doctor-nurse-handoff {
+  margin-bottom: 14px;
+  padding: 13px;
+  border: 1px solid #dce8f1;
+  border-radius: 10px;
+  background: #f7fafc;
+}
+
+.doctor-nurse-handoff-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.doctor-nurse-handoff-heading .eyebrow {
+  margin-bottom: 4px;
+  font-size: 8px;
+}
+
+.doctor-nurse-handoff-heading h3 {
+  margin: 0;
+  color: #273d57;
+  font: 700 13px Manrope, sans-serif;
+}
+
+.doctor-nurse-handoff-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.doctor-nurse-handoff-field {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #e8eef3;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.doctor-nurse-handoff-field.wide {
+  grid-column: 1 / -1;
+}
+
+.doctor-nurse-handoff-field small,
+.doctor-nurse-handoff-field b {
+  display: block;
+}
+
+.doctor-nurse-handoff-field small {
+  margin-bottom: 4px;
+  color: #8090a1;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.doctor-nurse-handoff-field b {
+  color: #334960;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.doctor-nurse-handoff-empty,
+.encounter-readonly-notice {
+  margin: 0;
+  padding: 10px;
+  border-radius: 7px;
+  color: #657a8f;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.doctor-nurse-handoff-empty {
+  border: 1px dashed #dce5ed;
+  background: #fff;
+}
+
+.encounter-readonly-notice {
+  margin-bottom: 14px;
+  border: 1px solid #f0dfb8;
+  background: #fffaf0;
+  color: #83631f;
+}
+
+.doctor-consultation-guidance {
+  margin: -7px 0 13px;
+  color: #78899a;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.field-help {
+  color: #8290a1;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.patient-report-items,
+.patient-report-timeline {
+  display: grid;
+  gap: 8px;
+}
+
+.patient-report-input {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 150px minmax(180px, 1.5fr) minmax(150px, 1.2fr) 28px;
+  align-items: end;
+  gap: 8px;
+}
+
+.patient-report-input label {
+  display: grid;
+  gap: 5px;
+  color: #5b6d81;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.patient-report-input input {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+}
+
+.patient-timeline-date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 2px;
+  color: #168f83;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.patient-timeline-date::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #dfe9e7;
+}
+
+.patient-report-link {
+  display: inline-flex;
+  margin: 4px 8px 0 0;
+  color: #168f83;
+  font-size: 10px;
+  text-decoration: underline;
+}
+
+.patient-record-history {
+  display: grid;
+  gap: 12px;
+  max-height: calc(100vh - 360px);
+  margin: 0 0 22px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.patient-record-card {
+  padding: 14px;
+  border: 1px solid #e7edf3;
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.patient-record-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.record-type {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: #e7f7f3;
+  color: #09877e;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.record-type.ipd {
+  background: #fff3e4;
+  color: #ad6d13;
+}
+
+.patient-record-top h4 {
+  margin: 8px 0 3px;
+  color: #263c55;
+  font-size: 13px;
+}
+
+.patient-record-top p,
+.patient-record-grid p {
+  margin: 0;
+  color: #75849a;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.record-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.patient-record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid #e9eef3;
+}
+
+.patient-record-grid b {
+  display: block;
+  margin-bottom: 3px;
+  color: #465a72;
+  font-size: 10px;
+}
+
+.prescription-editor {
+  padding: 12px;
+  border: 1px solid #e7edf3;
+  border-radius: 9px;
+  background: #fbfcfe;
+}
+
+.prescription-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.prescription-editor-heading b,
+.prescription-editor-heading small {
+  display: block;
+}
+
+.prescription-editor-heading b {
+  color: #334960;
+  font-size: 11px;
+}
+
+.prescription-editor-heading small {
+  margin-top: 4px;
+  color: #8290a1;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.prescription-items {
+  display: grid;
+  gap: 9px;
+}
+
+.prescription-input-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.3fr) repeat(4, minmax(95px, 1fr)) minmax(130px, 1.2fr) 28px;
+  align-items: end;
+  gap: 8px;
+}
+
+.prescription-input-row label {
+  min-width: 0;
+  color: #5b6d81;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.prescription-input-row input,
+.prescription-input-row select {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  margin-top: 5px;
+  padding: 0 8px;
+  border: 1px solid #dfe7ef;
+  border-radius: 7px;
+  background: white;
+  color: #263c55;
+  font-size: 10px;
+}
+
+.prescription-input-row .remove-line {
+  width: 27px;
+  height: 32px;
+  margin-bottom: 1px;
+}
+
+.prescription-record-list {
+  grid-column: 1 / -1;
+}
+
+.prescription-record-list>b {
+  display: block;
+  margin-bottom: 7px;
+  color: #465a72;
+  font-size: 10px;
+}
+
+.prescription-record-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid #e9eef3;
+}
+
+.prescription-record-item strong,
+.prescription-record-item small {
+  display: block;
+}
+
+.prescription-record-item strong {
+  color: #334960;
+  font-size: 11px;
+}
+
+.prescription-record-item small {
+  margin-top: 3px;
+  color: #75849a;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.prescription-remaining {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  color: #09877e;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.patient-record-empty {
+  padding: 22px 14px;
+  border: 1px dashed #dbe4ec;
+  border-radius: 9px;
+  color: #75849a;
+  text-align: center;
+  font-size: 12px;
+}
+
+.record-form-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: #273d57;
+  font: 700 14px Manrope, sans-serif;
+}
+
+.consultation-step-number {
+  display: inline-grid;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #e5f4f1;
+  color: #09877e;
+  font: 800 11px Manrope, sans-serif;
+}
+
+.consultation-step-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 3px;
+  padding-top: 13px;
+  border-top: 1px solid #e8eef3;
+}
+
+.consultation-step-heading b,
+.consultation-step-heading small {
+  display: block;
+}
+
+.consultation-step-heading b {
+  color: #334960;
+  font-size: 11px;
+}
+
+.consultation-step-heading small {
+  margin-top: 3px;
+  color: #8290a1;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+#patientEncounterForm .form-actions {
+  position: sticky;
+  bottom: -21px;
+  z-index: 3;
+  margin: 18px 0 -21px;
+  padding: 13px 0 14px;
+  border-top: 1px solid #e7edf3;
+  background: rgb(255 255 255 / 96%);
+}
+
+@media (max-width: 640px) {
+  .patient-clinical-identity {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .patient-clinical-visit {
+    grid-column: 2;
+    justify-items: start;
+  }
+
+  .patient-clinical-visit small {
+    text-align: left;
+  }
+
+  .patient-clinical-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .patient-history-column {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .patient-record-history {
+    max-height: 38vh;
+  }
+
+  .patient-history-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .patient-history-tools .patient-history-search,
+  .patient-history-count {
+    grid-column: 1 / -1;
+  }
+
+  .patient-history-tools .button {
+    width: 100%;
+  }
+
+  .doctor-nurse-handoff-details {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-nurse-handoff-field.wide {
+    grid-column: auto;
+  }
+
+  .patient-record-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .patient-record-top {
+    flex-direction: column;
+  }
+
+  .prescription-input-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) 28px;
+  }
+
+  .prescription-input-row .prescription-instructions-field {
+    grid-column: span 2;
+  }
+}

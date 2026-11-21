@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: csk-clinic-demo
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./apps/api/Dockerfile.render
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: NODE_ENV
+        value: production
+      - key: WEB_DIST_PATH
+        value: /app/web-dist
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: demo@cskclinic.example.com
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CLINIC_NAME
+        value: CSK Clinic Demo
+      - key: CORS_ORIGINS
+        value: https://csk-clinic-demo.onrender.com

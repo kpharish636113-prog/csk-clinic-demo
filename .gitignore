@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+apps/api/dist/
+apps/api/node_modules/
+apps/api/src/generated/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
+npm-debug.log*
+
