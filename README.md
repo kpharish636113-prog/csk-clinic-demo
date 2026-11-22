@@ -61,18 +61,36 @@ The API listens on `http://localhost:3001`; health check: `GET /api/health`.
 
 ## Public, shared demo deployment
 
-`render.yaml` describes a free Render Docker service that serves the frontend and API from one URL. The API uses a Neon PostgreSQL database so records survive Render service restarts. The deployment is for a synthetic, shared demo only; it is not suitable for real clinic, patient, or payment data.
+This project can be deployed as one same-origin Vercel project: Vercel serves the React/Vite shell and routes `/api/*` to the NestJS function. Use Supabase Postgres for persistent demo data. The shared demo is for synthetic data only; do not enter real or identifiable health or payment information.
 
-This workspace is not connected to a Git remote. To deploy, first create a repository in your own Git provider account and push this project there. Keep `.env` out of source control; `.gitignore` already excludes it. The deployment cannot produce a public URL until the repository and hosting accounts are connected.
+Vercel Hobby is limited by Vercel's terms to personal or non-commercial use. Use it only for a personal, non-commercial demo. A clinic's business use requires an eligible paid plan. Supabase and Vercel free tiers are not production-ready or suitable for regulated clinic records.
 
-1. Create a Neon PostgreSQL project, preferably in Singapore, and copy its connection string with SSL enabled. Do not put this URL in the repository or share it in chat.
-2. In Render, create a Blueprint from your repository and select `render.yaml`. Provide the Neon `DATABASE_URL` and a unique `ADMIN_PASSWORD` of at least 12 characters when prompted. Render generates `JWT_SECRET`; the demo account email is `demo@cskclinic.example.com`.
-3. Wait for the Render service to deploy. The frontend and API share `https://csk-clinic-demo.onrender.com`; the API health check is at `/api/health`. If Render requires a different service name, update `CORS_ORIGINS` in the Blueprint to match, then redeploy.
-4. Open **Clinic settings → Connect to API** and sign in with the demo email and the `ADMIN_PASSWORD` you configured. Share the frontend link and password separately with intended demo viewers.
+### Deploy from GitHub
 
-All API-connected visitors share the same editable database and account; their changes are visible to other visitors and can overwrite or delete demo records. The API database is initialized with the clinic and owner account, not the browser's sample records. Before connecting, each browser displays its own local synthetic sample data; after connecting, create any demo records in the shared database.
+1. Push this project to the GitHub repository connected to your Vercel account. In Vercel, select **Add New → Project**, import the repository, and keep the **Root Directory** at the repository root. `vercel.json` contains the build and output settings.
+2. Create a Supabase project.
+   - Open **Connect** in the Supabase project and copy the **Transaction pooler** URI (port `6543`) for the serverless runtime. Replace the database password placeholder and append `?pgbouncer=true` if Supabase did not include it.
+   - Copy the **Direct** or **Session pooler** URI (port `5432`) for migrations and local administration.
+   - For a shared demo, create the Prisma role only if you want to avoid using the `postgres` role. The role setup script is in the official Supabase Prisma guide; otherwise use the Supabase database password with the standard `postgres` role as documented by Supabase.
+   - In Vercel **Project Settings → Environment Variables**, add:
+   - `DATABASE_URL`: Supabase transaction-pooler URI, including `?pgbouncer=true`. Keep it private.
+   - `DIRECT_URL`: Supabase direct or session-pooler URI for migrations. Keep it private.
+   - `JWT_SECRET`: a randomly generated secret with at least 32 characters.
+   - `ADMIN_EMAIL`: the sign-in email for the demo owner.
+   - `ADMIN_PASSWORD`: a unique password of at least 12 characters.
+   - `CLINIC_NAME`: `CSK Clinic Demo` (or your chosen demo name).
+3. Deploy the project. The Vercel build generates Prisma Client and builds both the API and frontend; it does not connect to or migrate the database.
+4. Before using the API, apply migrations and create the owner once. On a trusted computer, set `DATABASE_URL` to the Supabase **transaction-pooler** URI and `DIRECT_URL` to the Supabase **direct or session-pooler** URI in the ignored local `.env` file. Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `CLINIC_NAME`, and `JWT_SECRET` to the same values configured in Vercel. Then run:
 
-Render's free API service can sleep after inactivity and take about a minute to wake. Neon Free has usage and storage limits, and neither free service tier provides production-grade recovery or compliance controls. These services are for previews only; do not enter real or identifiable health information.
+   ```powershell
+   npm run db:deploy
+   npm run db:seed
+   ```
+
+   The seed creates or updates the clinic owner account; it does not add the browser's sample patients or inventory to the shared database. Keep `.env` out of Git and do not paste database URLs or passwords into chat.
+5. Confirm the deployment at `/api/health`, then open **Clinic settings → Connect to API** and sign in using `ADMIN_EMAIL` and `ADMIN_PASSWORD`. API-connected visitors share one editable database, so their changes are visible to one another.
+
+The browser-only demo records remain local to each browser until **Connect to API** is used. Vercel deployments require the GitHub changes to be committed and pushed; no public URL exists until Vercel completes the deployment.
 
 ## Initial API
 
