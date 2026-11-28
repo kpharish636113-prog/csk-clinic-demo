@@ -910,6 +910,11 @@ test('doctor workspace receives check-ins and saves consultation history', async
   await expect(page.locator('#doctorKpiAssigned')).not.toHaveText('—');
   await expect(page.locator('#doctorHourlyArrivals')).toBeVisible();
   await expect(page.locator('#doctorStatusDistribution')).toBeVisible();
+  const dashboardTextColors = await page.locator('#doctorDashboard').evaluate((dashboard) =>
+    [...dashboard.querySelectorAll('p, small, span, .doctor-chart-label')]
+      .map((element) => getComputedStyle(element).color),
+  );
+  expect(new Set(dashboardTextColors)).toEqual(new Set(['rgb(23, 43, 69)']));
   await page.locator('#doctorWorkspaceNav').click();
   await expect(page.locator('#doctor .doctor-workspace-layout')).toHaveCSS('display', 'grid');
   await expect(page.locator('#doctor .doctor-queue-item')).toHaveCSS('border-radius', '10px');

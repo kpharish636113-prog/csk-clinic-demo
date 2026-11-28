@@ -3409,6 +3409,14 @@
   .doctor-realtime-notifications { top: 12px; right: 12px; }
 }
 
+#doctor-dashboard .page-heading h1,
+#doctor-dashboard .page-heading p,
+#doctor-dashboard .doctor-realtime-status,
+#doctor-dashboard .doctor-dashboard,
+#doctor-dashboard .doctor-dashboard *:not(button):not(svg):not(path) {
+  color: #172b45;
+}
+
 body.workspace-front-office #doctorWorkspaceNav,
 body.workspace-front-office #doctor {
   display: none !important;
