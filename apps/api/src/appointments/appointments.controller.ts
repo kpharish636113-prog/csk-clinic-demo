@@ -16,10 +16,13 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import {
+  CreateCheckInDto,
   CreateAppointmentDto,
   CreateSlotDto,
+  ListQueueQueryDto,
   ListAppointmentsQueryDto,
   ListSlotsQueryDto,
+  UpdateQueueStatusDto,
   UpdateAppointmentStatusDto,
 } from './appointment.dto';
 import { AppointmentsService } from './appointments.service';
@@ -66,6 +69,38 @@ export class AppointmentsController {
   @Get('doctors')
   listDoctors(@CurrentUser() user: AuthenticatedUser) {
     return this.appointments.listDoctors(user.clinicId);
+  }
+
+  @Get('queue')
+  listQueue(@CurrentUser() user: AuthenticatedUser, @Query() query: ListQueueQueryDto) {
+    return this.appointments.listQueue(user, query);
+  }
+
+  @Get('dashboard')
+  getDashboard(@CurrentUser() user: AuthenticatedUser) {
+    return this.appointments.getDashboard(user);
+  }
+
+  @Get('realtime')
+  @Roles(UserRole.DOCTOR)
+  getRealtimeSubscription(@CurrentUser() user: AuthenticatedUser) {
+    return this.appointments.getRealtimeSubscription(user);
+  }
+
+  @Post('check-ins')
+  @Roles(...SCHEDULER_ROLES, UserRole.DOCTOR, UserRole.NURSE)
+  checkIn(@CurrentUser() user: AuthenticatedUser, @Body() body: CreateCheckInDto) {
+    return this.appointments.checkIn(user, body);
+  }
+
+  @Patch('queue/:id/status')
+  @Roles(...CLINIC_MANAGERS, UserRole.RECEPTIONIST, UserRole.DOCTOR, UserRole.NURSE)
+  updateQueueStatus(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: UpdateQueueStatusDto,
+  ) {
+    return this.appointments.updateQueueStatus(user, id, body.status);
   }
 
   @Post('slots')

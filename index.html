@@ -10,52 +10,88 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="clinic.css?v=20261123-responsive-cards" />
-    <link rel="stylesheet" href="dashboard-enhancements.css" />
-    <link rel="stylesheet" href="patient-records.css?v=20261119-history-filters" />
-    <link rel="stylesheet" href="patient-module.css?v=20261123-responsive-cards" />
+    <link rel="stylesheet" href="dashboard-enhancements.css?v=20261123-display-controls-v3" />
+    <link rel="stylesheet" href="patient-records.css?v=20261127-front-office-vitals-validation-v1" />
+    <link rel="stylesheet" href="patient-module.css?v=20261125-vitals-chart-controls-v1" />
     <link rel="stylesheet" href="billing-print.css" />
     <link rel="stylesheet" href="brand.css?v=20261113-clinic-logo" />
+    <link rel="stylesheet" href="pharmacy-dashboard.css" />
+    <link rel="stylesheet" href="prescriptions.css?v=20261127-prescription-pos" />
   </head>
   <body>
+    <script>
+      (() => {
+        const mode = new URLSearchParams(window.location.search).get('workspace');
+        if (mode === 'front-office' || mode === 'doctor') document.body.classList.add(`workspace-${mode}`);
+      })();
+    </script>
     <div class="app">
       <aside class="sidebar" id="sidebar">
         <a class="brand" href="#overview" aria-label="CSK Clinic home">
           <img class="brand-mark" src="assets/csk-clinic-logo.png" alt="CSK Clinic logo" />
           <span><strong>CSK Clinic</strong><small>Clinic management</small></span>
         </a>
-        <div class="clinic-switch"><img class="clinic-avatar" src="assets/csk-clinic-logo.png" alt="" /><span><b>CSK Clinic</b><small>Main clinic</small></span><span class="switch-arrow">⌄</span></div>
+        <div class="workspace-switcher">
+          <button class="clinic-switch" id="workspaceSwitcherToggle" type="button" aria-label="Switch workspace" title="Switch workspace" aria-haspopup="true" aria-controls="workspaceSwitcherMenu" aria-expanded="false">
+            <img class="clinic-avatar" src="assets/csk-clinic-logo.png" alt="" />
+            <span><b>CSK Clinic</b><small id="activeWorkspaceName">Front Office</small></span>
+            <span class="switch-arrow" aria-hidden="true">⌄</span>
+          </button>
+          <div class="workspace-switcher-menu hidden" id="workspaceSwitcherMenu" aria-label="Switch workspace">
+            <button type="button" class="workspace-switcher-option" data-workspace-url="front-office.html"><span class="workspace-option-icon">♙</span><span><b>Front Office</b><small>Registration and check-in</small></span></button>
+            <button type="button" class="workspace-switcher-option" id="doctorWorkspaceOption" data-workspace-url="doctor-workspace.html"><span class="workspace-option-icon">⚕</span><span><b>Doctor Workspace</b><small>Assigned patients and consultations</small></span></button>
+            <button type="button" class="workspace-switcher-option" id="doctorMedicinesOption" data-workspace-url="index.html?workspace=doctor#pharmacy"><span class="workspace-option-icon">✚</span><span><b>Medicines</b><small>Doctor medicine reference</small></span></button>
+            <button type="button" class="workspace-switcher-option" data-workspace-url="index.html?workspace=front-office#pharmacy"><span class="workspace-option-icon">▤</span><span><b>Medicines &amp; stock</b><small>Front Office inventory</small></span></button>
+          </div>
+        </div>
         <p class="nav-caption">WORKSPACE</p>
         <nav class="navigation" aria-label="Main navigation">
-          <a class="nav-link active" href="#overview" data-section="overview"><span>▦</span> Overview</a>
-          <a class="nav-link" href="#patients" data-section="patients"><span>♙</span> Patients <b class="nav-count" id="navPatientCount">0</b></a>
-          <a class="nav-link" href="#appointments" data-section="appointments"><span>▣</span> Appointments</a>
-          <a class="nav-link" href="#billing" data-section="billing"><span>▤</span> Billing & receipts</a>
-          <a class="nav-link" href="#pharmacy" data-section="pharmacy"><span>✚</span> Medicines & stock</a>
-          <a class="nav-link" href="#consumables" data-section="consumables"><span>◇</span> Clinical supplies</a>
-          <a class="nav-link" href="#reports" data-section="reports"><span>◷</span> Reports</a>
+          <a class="nav-link active" href="#overview" data-section="overview" title="Overview"><span>▦</span> Overview</a>
+          <a class="nav-link" href="#patients" data-section="patients" title="Patients"><span>♙</span> Patients <b class="nav-count" id="navPatientCount">0</b></a>
+          <a class="nav-link hidden" href="#doctor" data-section="doctor" id="doctorWorkspaceNav" title="Doctor workspace"><span>⚕</span> Doctor workspace</a>
+          <div class="doctor-search-navigation hidden" id="doctorSearchNav" aria-label="Clinical search engines">
+            <p class="doctor-search-caption">SEARCH ENGINE</p>
+            <button type="button" class="doctor-search-option" id="doctorSearchGoogle" data-doctor-search-provider="google" title="Google search"><span class="provider-google" aria-hidden="true">G</span> Google</button>
+            <button type="button" class="doctor-search-option" id="doctorSearchChatGPT" data-doctor-search-provider="chatgpt" title="ChatGPT search"><span class="provider-chatgpt" aria-hidden="true">AI</span> ChatGPT</button>
+          </div>
+          <a class="nav-link hidden" href="#nurse" data-section="nurse" id="nurseWorkspaceNav" title="Nurse workspace"><span>✚</span> Nurse workspace</a>
+          <a class="nav-link" href="#prescriptions" data-section="prescriptions" title="Prescriptions"><span>℞</span> Prescriptions</a>
+          <a class="nav-link" href="#billing" data-section="billing" title="Billing & receipts"><span>▤</span> Billing & receipts</a>
+          <a class="nav-link" href="#pharmacy" data-section="pharmacy" title="Pharmacy"><span>✚</span> Pharmacy</a>
+          <a class="nav-link" href="#consumables" data-section="consumables" title="Clinical supplies"><span>◇</span> Clinical supplies</a>
+          <a class="nav-link" href="#reports" data-section="reports" title="Reports"><span>◷</span> Reports</a>
         </nav>
         <div class="sidebar-bottom">
           <div class="help-card"><span class="help-icon">?</span><b>Need a hand?</b><p>Clinic tools and data help</p><a href="#settings">Open help center <span>↗</span></a></div>
-          <a class="nav-link" href="#settings" data-section="settings"><span>⚙</span> Clinic settings</a>
-          <div class="user-card"><span class="user-avatar">AD</span><span><b>Clinic Admin</b><small>Administrator</small></span><button class="more-button" aria-label="More account options">•••</button></div>
+          <a class="nav-link" href="#settings" data-section="settings" title="Clinic settings"><span>⚙</span> Clinic settings</a>
+          <div class="user-card"><span class="user-avatar">AD</span><span><b>Clinic Admin</b><small>Administrator</small></span><div class="header-popover-wrap account-menu-wrap"><button class="more-button" type="button" data-header-popover-toggle="accountOptionsPanel" aria-controls="accountOptionsPanel" aria-expanded="false" aria-label="More account options">•••</button><div class="header-popover header-popover-account hidden" id="accountOptionsPanel" aria-label="Account options"><button type="button" data-header-popover-action="settings">Clinic settings</button><button type="button" data-header-popover-action="overview">Clinic overview</button></div></div></div>
         </div>
       </aside>
 
       <main class="main">
         <header class="topbar">
-          <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+          <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Open navigation">☰</button>
+          <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">‹</button>
           <div class="breadcrumb"><span>CSK Clinic</span><span>/</span><b id="pageBreadcrumb">Overview</b></div>
           <div class="top-actions">
             <div class="global-search-wrap">
               <label class="global-search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search patients, appointments, invoices, medicines..." aria-label="Search patients, appointments, invoices, and medicines" aria-autocomplete="list" aria-controls="globalSearchResults" aria-expanded="false" /><kbd>Ctrl K</kbd></label>
               <div id="globalSearchResults" class="global-search-results hidden" role="listbox" aria-label="Search results"></div>
             </div>
-            <button class="icon-button notification-button" aria-label="Notifications">♧<i></i></button>
+            <div class="font-size-control" role="group" aria-label="Font size controls"><span aria-hidden="true">Aa</span><output id="fontSizeValue" aria-live="polite">100%</output><button id="decreaseFontSize" type="button" aria-label="Decrease font size" title="Decrease font size">−</button><button id="increaseFontSize" type="button" aria-label="Increase font size" title="Increase font size">+</button></div>
+            <button class="icon-button fullscreen-button" id="fullscreenToggle" type="button" aria-label="Enter full screen" title="Enter full screen">⛶</button>
+            <div class="header-popover-wrap notification-menu-wrap"><button class="icon-button notification-button" type="button" data-header-popover-toggle="notificationsPanel" aria-controls="notificationsPanel" aria-expanded="false" aria-label="Notifications">♧<i class="hidden" aria-hidden="true"></i></button><div class="header-popover header-popover-notifications hidden" id="notificationsPanel" aria-label="Clinic alerts" aria-live="polite"></div></div>
             <span class="top-avatar">AD</span>
           </div>
         </header>
 
         <div class="page-content">
+          <section class="workspace-access-denied hidden" id="workspaceAccessDenied" role="alert" aria-labelledby="workspaceAccessTitle">
+            <p class="eyebrow">ACCESS RESTRICTED</p>
+            <h1 id="workspaceAccessTitle">Doctor Workspace access required</h1>
+            <p class="muted">Sign in with an authorized doctor or clinic administrator account to open this page.</p>
+            <a class="button button-primary" href="front-office.html">Open Front Office</a>
+          </section>
           <section class="view active" id="overview">
             <div class="welcome-row">
               <div><p class="eyebrow" id="todayLabel">THURSDAY, NOVEMBER 12</p><h1>Good morning, Admin <span class="wave">✦</span></h1><p class="muted">Here’s what’s happening at your clinic today.</p></div>
@@ -92,24 +128,38 @@
           </section>
 
           <section class="view" id="patients">
-            <div class="page-heading"><div><p class="eyebrow">PATIENT RECORDS</p><h1>Patients</h1><p class="muted">Search, register and review complete patient information.</p></div><div class="patient-page-actions"><button class="button button-light" type="button" id="openPatientDrafts">Drafts <span id="patientDraftCount">0</span></button><button class="button button-primary" data-open-modal="patientModal">＋ Add patient</button></div></div>
+            <div class="page-heading"><div><p class="eyebrow">PATIENT RECORDS</p><h1>Patients</h1><p class="muted">A clear view of every patient and their ongoing care.</p></div><button class="button button-primary patient-heading-add" type="button" data-open-modal="patientModal">＋ New patient</button></div>
+            <nav class="patient-module-nav" aria-label="Patient management">
+              <button type="button" class="active" aria-current="page">All patients</button>
+              <button type="button" data-open-modal="patientModal">Add patient</button>
+              <span class="patient-module-nav-actions"><button class="button button-light button-small" type="button" id="openPatientDrafts">Registration drafts <span id="patientDraftCount">0</span></button></span>
+            </nav>
             <div class="stats-grid compact-stats patient-dashboard-stats">
-              <article class="stat-card"><div class="stat-top"><span>Total patients</span><span class="stat-icon blue">♙</span></div><strong id="patientPageTotal">0</strong><div class="stat-foot"><span class="stat-note">Registered records</span></div></article>
-              <article class="stat-card"><div class="stat-top"><span>New registrations</span><span class="stat-icon green">＋</span></div><strong id="patientMonthTotal">0</strong><div class="stat-foot"><span class="stat-note">Added this month</span></div></article>
-              <article class="stat-card"><div class="stat-top"><span>Returning patients</span><span class="stat-icon violet">↻</span></div><strong id="patientReturningTotal">0</strong><div class="stat-foot"><span class="stat-note">With clinic visits</span></div></article>
-              <article class="stat-card"><div class="stat-top"><span>Upcoming follow-ups</span><span class="stat-icon orange">◷</span></div><strong id="patientFollowupTotal">0</strong><div class="stat-foot"><span class="stat-note">Next visit planned</span></div></article>
+              <article class="stat-card"><div class="stat-top"><span>Total patients</span><span class="stat-icon blue">♙</span></div><strong id="patientPageTotal">0</strong><div class="stat-foot"><span class="stat-note">All registered records</span></div></article>
+              <article class="stat-card"><div class="stat-top"><span>New this month</span><span class="stat-icon green">＋</span></div><strong id="patientMonthTotal">0</strong><div class="stat-foot"><span class="stat-note">Registered this month</span></div></article>
+              <article class="stat-card"><div class="stat-top"><span>Patients seen today</span><span class="stat-icon violet">↻</span></div><strong id="patientSeenTodayTotal">0</strong><div class="stat-foot"><span class="stat-note">Unique patients with a visit today</span></div></article>
             </div>
-            <article class="panel table-panel">
-              <div class="table-toolbar"><div><h2>Patient directory</h2><p id="patientResultCount">0 records</p></div><div class="table-actions"><label class="table-search"><span>⌕</span><input id="patientSearch" placeholder="Search name, ID, phone or email" /></label></div></div>
+            <article class="panel table-panel patient-directory-panel">
+              <div class="table-toolbar patient-directory-toolbar">
+                <div><h2>Patient directory</h2><p id="patientResultCount">0 records</p></div>
+                <div class="patient-directory-actions">
+                  <label class="table-search patient-directory-search"><span>⌕</span><input id="patientSearch" type="search" placeholder="Search name, Patient ID or mobile number" aria-label="Search patients by name, Patient ID or mobile number" /></label>
+                  <button class="button button-light button-small" type="button" id="blankRegistrationForm">Blank registration form</button>
+                  <button class="button button-light button-small" type="button" id="blankConsentForm">Blank consent form</button>
+                  <button class="button button-primary button-small" type="button" data-open-modal="patientModal">＋ New patient</button>
+                  <button class="button button-light button-small" type="button" id="exportPatientDirectory">Export CSV</button>
+                </div>
+              </div>
               <div class="patient-directory-filters">
                 <select id="patientGenderFilter" aria-label="Filter by gender"><option value="">All genders</option><option>Female</option><option>Male</option><option>Other</option><option>Unspecified</option></select>
                 <select id="patientBloodFilter" aria-label="Filter by blood group"><option value="">All blood groups</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
-                <select id="patientTypeFilter" aria-label="Filter patient type"><option value="">All patient types</option><option value="new">New this month</option><option value="returning">Returning</option><option value="followup">Upcoming follow-up</option><option value="appointment">Has appointments</option></select>
-                <select id="patientSort" aria-label="Sort patients"><option value="recent">Newest registered</option><option value="name">Name A–Z</option><option value="lastVisit">Last visit</option><option value="code">Patient ID</option></select>
+                <select id="patientTypeFilter" aria-label="Filter patient type"><option value="">All patient types</option><option value="new">New · no previous visit</option><option value="returning">Returning · previous visit</option><option value="followup">Upcoming follow-up</option><option value="appointment">Has appointments</option></select>
+                <select id="patientStatusFilter" aria-label="Filter patient status"><option value="">All statuses</option><option value="Active">Active</option><option value="Inactive">Archived</option></select>
+                <select id="patientSort" aria-label="Sort patients"><option value="recent">Recently registered</option><option value="name">Name A–Z</option><option value="lastVisit">Last visit</option><option value="code">Patient ID</option></select>
                 <button class="button button-light button-small" type="button" id="clearPatientFilters">Clear filters</button>
               </div>
-              <div class="table-scroll"><table><thead><tr><th>Patient</th><th>Patient ID</th><th>Mobile</th><th>Age / Gender</th><th>Blood group</th><th>Last visit</th><th>Registered</th><th>Actions</th></tr></thead><tbody id="patientsTable"></tbody></table></div>
-              <div class="empty-state hidden" id="patientsEmpty"><span>♙</span><b>No patients found</b><p>Add a patient or adjust your search.</p></div>
+              <div class="table-scroll patient-directory-scroll"><table><thead><tr><th>Patient</th><th>Age / sex</th><th>Blood group</th><th>Mobile</th><th>City</th><th>Medical alerts</th><th>Last visit</th><th>Actions</th></tr></thead><tbody id="patientsTable"></tbody></table></div>
+              <div class="empty-state hidden" id="patientsEmpty"><span>♙</span><b>No patients found</b><p>Register a patient or adjust your search and filters.</p></div>
               <div class="patient-directory-footer"><p id="patientPageRange">Showing 0 records</p><div class="patient-pagination"><button class="button button-light button-small" type="button" id="patientPrevPage">← Previous</button><span id="patientPageNumber">Page 1</span><button class="button button-light button-small" type="button" id="patientNextPage">Next →</button></div></div>
             </article>
             <aside class="patient-preview-drawer hidden" id="patientPreviewDrawer" aria-label="Patient quick preview">
@@ -120,6 +170,11 @@
 
           <section class="view" id="appointments">
             <div class="page-heading"><div><p class="eyebrow">CLINIC SCHEDULE</p><h1>Appointments</h1><p class="muted">See upcoming visits and update their status.</p></div><button class="button button-primary" data-open-modal="appointmentModal">＋ New appointment</button></div>
+            <article class="panel table-panel queue-panel">
+              <div class="table-toolbar"><div><h2>Today’s patient queue</h2><p>Checked-in visits with a permanent visit ID.</p></div><div class="queue-toolbar-actions"><span class="queue-count" id="queueCount">0 patients</span><button class="button button-light button-small" type="button" id="refreshPatientQueue">Refresh</button><button class="button button-primary button-small" type="button" id="openWalkInCheckIn">＋ Walk-in check-in</button></div></div>
+              <div class="table-scroll"><table><thead><tr><th>Token</th><th>Patient</th><th>Age / Gender</th><th>Doctor</th><th>Visit type</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead><tbody id="patientQueueTable"></tbody></table></div>
+              <div class="empty-state hidden" id="patientQueueEmpty"><span>◷</span><b>No patients in today’s queue</b><p>Check in a scheduled appointment or add a walk-in patient.</p></div>
+            </article>
             <article class="panel table-panel">
               <div class="table-toolbar"><div><h2>Appointment schedule</h2><p>Upcoming and past visits</p></div><label class="table-search"><span>⌕</span><input id="appointmentSearch" placeholder="Search patient or doctor" /></label></div>
               <div class="table-scroll"><table><thead><tr><th>Patient</th><th>Doctor</th><th>Department</th><th>Date & time</th><th>Visit reason</th><th>Status</th><th></th></tr></thead><tbody id="appointmentsTable"></tbody></table></div>
@@ -127,16 +182,208 @@
             </article>
           </section>
 
+          <section class="view" id="doctor">
+            <div class="page-heading"><div><p class="eyebrow">DOCTOR WORKSPACE</p><h1>OPD queue · Today</h1><p class="muted">Checked-in patients appear here automatically. Select a patient to review their record and begin consultation.</p></div><div class="doctor-heading-actions"><div class="doctor-api-controls"><span id="doctorApiConnectionLabel" aria-live="polite">Demo mode</span><button class="button button-primary button-small" type="button" id="doctorApiConnectButton">Connect to clinic API</button><button class="button button-light button-small hidden" type="button" id="doctorApiDisconnectButton">Disconnect</button></div><span class="doctor-realtime-status" id="doctorRealtimeStatus" aria-live="polite">Automatic queue sync</span><button class="button button-light" type="button" id="refreshDoctorQueue">Refresh queue</button></div></div>
+            <section class="doctor-dashboard" id="doctorDashboard" aria-label="Doctor dashboard">
+              <div class="doctor-dashboard-heading"><div><p class="eyebrow">LIVE OVERVIEW</p><h2>Today at a glance</h2><p id="doctorDashboardUpdated">Loading clinic statistics…</p></div><span class="doctor-dashboard-scope" id="doctorDashboardScope">Your queue</span></div>
+              <div class="doctor-kpi-grid">
+                <article><span>Total assigned</span><strong id="doctorKpiAssigned">—</strong><small>Patients in today’s queue</small></article>
+                <article><span>Waiting</span><strong id="doctorKpiWaiting">—</strong><small>Waiting or called</small></article>
+                <article><span>In consultation</span><strong id="doctorKpiConsulting">—</strong><small>With a doctor now</small></article>
+                <article><span>Completed</span><strong id="doctorKpiCompleted">—</strong><small>Consultations finished</small></article>
+                <article><span>Cancelled</span><strong id="doctorKpiCancelled">—</strong><small>Assignments cancelled</small></article>
+                <article><span>No-show</span><strong id="doctorKpiNoShow">—</strong><small>Did not attend</small></article>
+              </div>
+              <div class="doctor-dashboard-grid">
+                <article class="doctor-dashboard-card doctor-waiting-analytics">
+                  <div class="doctor-dashboard-card-heading"><div><h3>Waiting time</h3><p>Based on assignment and consultation timestamps</p></div><strong id="doctorAverageWait">—</strong></div>
+                  <div class="doctor-waiting-details"><div><small>Longest wait</small><b id="doctorLongestWait">—</b></div><div><small>Over 15 min</small><b id="doctorWait15">—</b></div><div><small>Over 30 min</small><b id="doctorWait30">—</b></div><div><small>Over 60 min</small><b id="doctorWait60">—</b></div></div>
+                </article>
+                <article class="doctor-dashboard-card doctor-arrivals-card">
+                  <div class="doctor-dashboard-card-heading"><div><h3>Hourly arrivals</h3><p>Patients assigned today</p></div><strong id="doctorConsultationDuration">—</strong></div>
+                  <div class="doctor-dashboard-chart doctor-hourly-chart" id="doctorHourlyArrivals" aria-label="Hourly arrivals chart"></div>
+                </article>
+                <article class="doctor-dashboard-card">
+                  <div class="doctor-dashboard-card-heading"><div><h3>Patient status</h3><p>Today’s queue distribution</p></div><strong id="doctorPendingConsultations">—</strong></div>
+                  <div class="doctor-status-chart" id="doctorStatusDistribution"></div>
+                </article>
+                <article class="doctor-dashboard-card doctor-trends-card">
+                  <div class="doctor-dashboard-card-heading"><div><h3>Patient trends</h3><p>Actual queue records · assigned and completed</p></div></div>
+                  <div class="doctor-trend-legend"><span>Assigned</span><span>Completed</span></div>
+                  <div class="doctor-trend-sections">
+                    <div><h4>Last 7 days</h4><div class="doctor-dashboard-chart doctor-trend-chart" id="doctorDailyTrend"></div></div>
+                    <div><h4>Last 4 weeks</h4><div class="doctor-dashboard-chart doctor-trend-chart" id="doctorWeeklyTrend"></div></div>
+                    <div><h4>Last 6 months</h4><div class="doctor-dashboard-chart doctor-trend-chart" id="doctorMonthlyTrend"></div></div>
+                  </div>
+                </article>
+                <article class="doctor-dashboard-card doctor-team-workload hidden" id="doctorTeamWorkloadPanel">
+                  <div class="doctor-dashboard-card-heading"><div><h3>Doctor workload</h3><p>Clinic-wide totals · management access</p></div></div>
+                  <div id="doctorTeamWorkload"></div>
+                </article>
+              </div>
+            </section>
+            <div class="doctor-realtime-notifications" id="doctorRealtimeNotifications" aria-live="polite" aria-atomic="false"></div>
+            <div class="doctor-workspace-layout">
+              <aside class="doctor-queue-panel">
+                <div class="doctor-queue-heading"><div><h2>My queue · Today</h2><p id="doctorQueueCounts">0 waiting · 0 in progress · 0 done</p></div><span class="doctor-queue-count" id="doctorQueueCount">0</span></div>
+                <label class="doctor-queue-search"><span>⌕</span><input id="doctorQueueSearch" type="search" placeholder="Search patient or token" aria-label="Search doctor queue" /></label>
+                <div id="doctorWorkspaceQueue" class="doctor-queue-list"></div>
+                <div class="empty-state hidden" id="doctorQueueEmpty"><b>No patients in the queue</b><p>New checked-in patients will appear here.</p></div>
+              </aside>
+              <main class="doctor-workspace-main" id="doctorWorkspaceMain">
+                <div class="doctor-workspace-placeholder" id="doctorWorkspacePlaceholder"><span>⚕</span><h2>Select a patient to begin</h2><p>New arrivals from Appointments will appear in this queue automatically.</p></div>
+                <div id="doctorWorkspacePatient" class="hidden"></div>
+              </main>
+            </div>
+          </section>
+
+          <section class="view" id="nurse">
+            <div class="page-heading nurse-page-heading"><div><p class="eyebrow">NURSE WORKSPACE</p><h1>Nursing handoff</h1><p class="muted">Review the doctor’s current-visit orders and record each medicine or injection administered.</p></div><button class="button button-light" type="button" id="refreshNurseQueue">↻ <span>Refresh queue</span></button></div>
+            <div class="nurse-overview-strip" aria-label="Nursing queue summary">
+              <article><span class="nurse-overview-icon nurse-icon-ready">✚</span><div><small>With doctor</small><strong id="nurseInProgressCount">0</strong><span>Visits in consultation</span></div></article>
+              <article><span class="nurse-overview-icon nurse-icon-done">✓</span><div><small>Doctor complete</small><strong id="nurseCompletedCount">0</strong><span>Ready for medication</span></div></article>
+              <article><span class="nurse-overview-icon nurse-icon-total">▤</span><div><small>Queue total</small><strong id="nurseTotalCount">0</strong><span>Visits assigned to nursing</span></div></article>
+            </div>
+            <div class="doctor-workspace-layout nurse-workspace-layout">
+              <aside class="doctor-queue-panel">
+                <div class="doctor-queue-heading nurse-queue-heading"><div><p class="eyebrow">PATIENT QUEUE</p><h2>Ready for nursing</h2><p id="nurseQueueCounts">0 visits ready</p></div><span class="doctor-queue-count" id="nurseQueueCount">0</span></div>
+                <label class="doctor-queue-search nurse-queue-search"><span aria-hidden="true">⌕</span><input id="nurseQueueSearch" type="search" placeholder="Find patient or ID" aria-label="Search nurse queue" /></label>
+                <div id="nurseWorkspaceQueue" class="doctor-queue-list nurse-queue-list"></div>
+                <div class="empty-state hidden" id="nurseQueueEmpty"><b>No visits ready</b><p>Patients appear here when a doctor starts or completes a visit.</p></div>
+              </aside>
+              <main class="doctor-workspace-main" id="nurseWorkspaceMain">
+                <div class="doctor-workspace-placeholder nurse-workspace-placeholder" id="nurseWorkspacePlaceholder"><span>✚</span><p class="eyebrow">MEDICATION HANDOFF</p><h2>Select a patient</h2><p>Choose a visit from the queue to review the prescription, check administration status, and record medicines given.</p></div>
+                <div id="nurseWorkspacePatient" class="hidden"></div>
+              </main>
+            </div>
+          </section>
+
           <section class="view" id="billing">
             <div class="page-heading"><div><p class="eyebrow">PAYMENTS & RECEIPTS</p><h1>Billing</h1><p class="muted">Create itemized invoices, record payments and print receipts.</p></div><button class="button button-primary" data-open-modal="invoiceModal">＋ Create invoice</button></div>
             <div class="stats-grid compact-stats"><article class="stat-card"><div class="stat-top"><span>Collected today</span><span class="stat-icon green">₹</span></div><strong id="billingCollected">₹0</strong><div class="stat-foot"><span class="stat-note">Payments received</span></div></article><article class="stat-card"><div class="stat-top"><span>Outstanding</span><span class="stat-icon orange">◷</span></div><strong id="billingOutstanding">₹0</strong><div class="stat-foot"><span class="stat-note">Balance on invoices</span></div></article><article class="stat-card"><div class="stat-top"><span>Total invoices</span><span class="stat-icon blue">▤</span></div><strong id="billingInvoiceCount">0</strong><div class="stat-foot"><span class="stat-note">All time</span></div></article></div>
-            <article class="panel table-panel"><div class="table-toolbar"><div><h2>Invoices</h2><p>Print or record a payment on an invoice</p></div><label class="table-search"><span>⌕</span><input id="invoiceSearch" placeholder="Search invoice or patient" /></label></div><div class="table-scroll"><table><thead><tr><th>Invoice</th><th>Patient</th><th>Created</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesTable"></tbody></table></div><div class="empty-state hidden" id="invoicesEmpty"><span>▤</span><b>No invoices created</b><p>Create an invoice to record a clinic charge.</p></div></article>
+            <article class="panel table-panel"><div class="table-toolbar"><div><h2>Invoices</h2><p>Print or record a payment on an invoice</p></div><label class="table-search"><span>⌕</span><input id="invoiceSearch" placeholder="Search invoice, patient or Patient ID" /></label></div><div class="table-scroll"><table><thead><tr><th>Invoice</th><th>Patient</th><th>Created</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesTable"></tbody></table></div><div class="empty-state hidden" id="invoicesEmpty"><span>▤</span><b>No invoices created</b><p>Create an invoice to record a clinic charge.</p></div></article>
+            <article class="panel table-panel" id="clinicServicesPanel"><div class="table-toolbar"><div><h2>Clinic service charges</h2><p>Configured rates are captured on each new invoice; older bills keep their recorded price.</p></div><button class="button button-light button-small" type="button" id="addClinicService">＋ Add service</button></div><div class="table-scroll"><table><thead><tr><th>Service</th><th>Code</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead><tbody id="clinicServicesTable"></tbody></table></div></article>
           </section>
 
-          <section class="view" id="pharmacy">
-            <div class="page-heading"><div><p class="eyebrow">PHARMACY INVENTORY</p><h1>Medicines & stock</h1><p class="muted">Add medicines, track quantities, prices and expiry dates.</p></div><button class="button button-primary" data-open-modal="medicineModal">＋ Add medicine</button></div>
-            <div class="stats-grid compact-stats"><article class="stat-card"><div class="stat-top"><span>Medicine products</span><span class="stat-icon blue">✚</span></div><strong id="medicineCount">0</strong><div class="stat-foot"><span class="stat-note">In inventory</span></div></article><article class="stat-card"><div class="stat-top"><span>Low stock</span><span class="stat-icon orange">!</span></div><strong id="medicineLowCount">0</strong><div class="stat-foot"><span class="stat-note">At or below reorder level</span></div></article><article class="stat-card"><div class="stat-top"><span>Inventory value</span><span class="stat-icon green">₹</span></div><strong id="inventoryValue">₹0</strong><div class="stat-foot"><span class="stat-note">Based on unit purchase cost</span></div></article></div>
-            <article class="panel table-panel"><div class="table-toolbar"><div><h2>Medicine inventory</h2><p>Use stock controls when medicines arrive or are dispensed.</p></div><div class="table-actions"><label class="table-search"><span>⌕</span><input id="medicineSearch" placeholder="Search name, category, batch" /></label><select class="select-control" id="medicineStockFilter" aria-label="Filter medicine stock"><option value="">All stock</option><option value="low">Low stock</option><option value="expired">Expired / expiring</option></select></div></div><div class="table-scroll"><table><thead><tr><th>Medicine</th><th>Category</th><th>Batch / expiry</th><th>Quantity</th><th>Reorder at</th><th>Sell price</th><th>Status</th><th>Actions</th></tr></thead><tbody id="medicinesTable"></tbody></table></div><div class="empty-state hidden" id="medicinesEmpty"><span>✚</span><b>No medicines found</b><p>Add medicines to start managing your stock.</p></div></article>
+          <section class="view prescriptions-view" id="prescriptions">
+            <div class="page-heading"><div><p class="eyebrow">DOCTOR ORDERS</p><h1>Prescriptions</h1><p class="muted" id="prescriptionsCount">Every prescription written in this clinic · 0 found</p></div><button class="button button-light" type="button" id="prescriptionExportCsv">⇩ Export CSV</button></div>
+            <article class="panel prescription-filter-panel">
+              <label class="prescription-search">Search<input id="prescriptionSearch" type="search" placeholder="Patient name, mobile, UHID or diagnosis" /></label>
+              <label>From<input id="prescriptionFrom" type="date" /></label>
+              <label>To<input id="prescriptionTo" type="date" /></label>
+              <label>Doctor<select id="prescriptionDoctorFilter"><option value="">All</option></select></label>
+              <button class="button button-primary" type="button" id="prescriptionApplyFilters">Filter</button>
+            </article>
+            <article class="panel prescription-table-panel">
+              <div class="table-scroll"><table><thead><tr><th>Date</th><th>Patient</th><th>Doctor</th><th>Diagnosis &amp; medicines</th><th>Actions</th></tr></thead><tbody id="prescriptionsTable"></tbody></table></div>
+              <div class="empty-state hidden" id="prescriptionsEmpty"><span>℞</span><b>No prescriptions found</b><p>Prescriptions saved by doctors will appear here.</p></div>
+            </article>
+          </section>
+
+          <section class="view pharmacy-view" id="pharmacy">
+            <nav class="pharmacy-tabs" role="tablist" aria-label="Pharmacy sections">
+              <button type="button" class="pharmacy-tab active" role="tab" aria-selected="true" data-pharmacy-tab="dashboard">Dashboard</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="pos">POS / Billing</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="sales">Sales</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="orders">Online orders</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="purchases">Purchases &amp; Suppliers</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="inventory">Inventory &amp; Stock</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="profit">Profit &amp; Loss</button>
+              <button type="button" class="pharmacy-tab" role="tab" aria-selected="false" data-pharmacy-tab="reports">Reports</button>
+            </nav>
+            <div class="pharmacy-tab-panel" id="pharmacyDashboard" role="tabpanel">
+              <div class="pharmacy-heading"><div><p class="eyebrow">CSK CLINIC · PHARMACY</p><div class="pharmacy-title" role="heading" aria-level="1">Pharmacy — Overview</div><p class="muted">Sales, stock and expiry at a glance.</p></div><button type="button" class="button button-primary" data-pharmacy-tab="pos">＋ New sale</button></div>
+              <div class="pharmacy-metric-row pharmacy-metric-row-primary">
+                <article class="pharmacy-metric-card pharmacy-metric-highlight"><span>Today's Medicine Sales</span><b id="pharmacyTodaySales">₹0.00</b><small id="pharmacyTodayInvoices">0 invoices today</small><i aria-hidden="true">▣</i></article>
+                <article class="pharmacy-metric-card"><span>Monthly Medicine Sales</span><b id="pharmacyMonthRevenue">₹0.00</b><small>Matched invoice items this month</small><i class="metric-icon violet" aria-hidden="true">⌁</i></article>
+                <article class="pharmacy-metric-card"><span>Product Gross Profit <em>(est.)</em></span><b id="pharmacyGrossProfit">₹0.00</b><small id="pharmacyGrossMargin">Product margin —</small><i class="metric-icon blue" aria-hidden="true">₹</i></article>
+                <article class="pharmacy-metric-card"><span>Stock Value</span><b id="pharmacyStockValue">₹0.00</b><small id="pharmacyStockMrp">MRP ₹0.00</small><i class="metric-icon orange" aria-hidden="true">◇</i></article>
+              </div>
+              <div class="pharmacy-metric-row pharmacy-metric-row-secondary">
+                <article class="pharmacy-metric-card"><span>Total Medicines</span><b id="pharmacyTotalMedicines">0</b><small>Active products</small></article>
+                <article class="pharmacy-metric-card"><span>Inventory Value</span><b id="pharmacyInventoryValue">₹0.00</b><small>At purchase cost</small></article>
+                <article class="pharmacy-metric-card"><span>Low Stock</span><b class="metric-warning" id="pharmacyLowStock">0</b><small>Need reorder</small></article>
+                <article class="pharmacy-metric-card"><span>Expiring Soon</span><b class="metric-danger" id="pharmacyExpiringSoon">0</b><small>Within 90 days</small></article>
+                <article class="pharmacy-metric-card"><span>Out of Stock</span><b class="metric-danger" id="pharmacyOutOfStock">0</b><small>Unavailable</small></article>
+              </div>
+              <div class="pharmacy-chart-grid">
+                <article class="pharmacy-card pharmacy-sales-chart"><div class="pharmacy-card-heading"><div><h2>Purchase vs Sales</h2><p>Last 8 months</p></div><span class="pharmacy-legend"><i></i> Sales <i class="purchase-legend"></i> Purchase</span></div><div class="pharmacy-chart" id="pharmacySalesChart" aria-label="Monthly pharmacy sales chart"></div></article>
+                <article class="pharmacy-card pharmacy-category-card"><div class="pharmacy-card-heading"><div><h2>Revenue by Category</h2><p>This month</p></div></div><div id="pharmacyCategoryChart" class="pharmacy-category-chart"></div></article>
+              </div>
+              <div class="pharmacy-summary-grid">
+                <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Top Selling · month</h2></div><button type="button" class="pharmacy-text-link" data-pharmacy-tab="sales">All →</button></div><div id="pharmacyTopSelling" class="pharmacy-list"></div></article>
+                <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Low Stock</h2></div><button type="button" class="pharmacy-text-link" data-pharmacy-tab="inventory">Reorder →</button></div><div id="pharmacyLowStockList" class="pharmacy-list"></div></article>
+                <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Expiring / expired</h2></div><button type="button" class="pharmacy-text-link" data-pharmacy-tab="inventory">All →</button></div><div id="pharmacyExpiringList" class="pharmacy-list"></div></article>
+              </div>
+              <div class="pharmacy-bottom-grid">
+                <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Slow Moving</h2></div><span class="pharmacy-review-badge">REVIEW</span></div><div id="pharmacySlowMoving" class="pharmacy-list"></div></article>
+                <article class="pharmacy-card pharmacy-recent-sales"><div class="pharmacy-card-heading"><div><h2>Recent Sales</h2></div><button type="button" class="pharmacy-text-link" data-pharmacy-tab="sales">All →</button></div><div id="pharmacyRecentSales" class="pharmacy-list"></div></article>
+              </div>
+            </div>
+            <div class="pharmacy-tab-panel hidden" id="pharmacyPos" role="tabpanel">
+              <div class="pharmacy-pos-workspace">
+                <div class="pharmacy-pos-left">
+                  <article class="pharmacy-card pharmacy-pos-patient">
+                    <div class="pharmacy-pos-search-row"><label class="pharmacy-pos-search"><span aria-hidden="true">⌕</span><input id="pharmacyPosPatientSearch" type="search" list="pharmacyPosPatientOptions" placeholder="Search patient by name / mobile / UHID" /></label><datalist id="pharmacyPosPatientOptions"></datalist><button class="button button-light" type="button" id="pharmacyPosLoadPrescription">℞ Load prescription</button></div>
+                    <div class="pharmacy-pos-patient-summary hidden" id="pharmacyPosPatientSummary"></div>
+                    <p class="pharmacy-pos-rx-note hidden" id="pharmacyPosPrescriptionNote"></p>
+                  </article>
+                  <article class="pharmacy-card pharmacy-pos-items-card">
+                    <div class="pharmacy-card-heading"><div><h2>Bill Items</h2><p id="pharmacyPosItemCount">0 lines · 0 units</p></div></div>
+                    <div class="table-scroll pharmacy-pos-items-scroll"><table><thead><tr><th>Medicine</th><th>Batch · Exp</th><th>Qty</th><th>MRP</th><th>Amount</th><th></th></tr></thead><tbody id="pharmacyPosItemsTable"></tbody></table></div>
+                    <div class="empty-state pharmacy-pos-empty" id="pharmacyPosEmpty"><span>✚</span><b>No bill items yet</b><p>Load a prescription or search inventory below.</p></div>
+                    <div class="pharmacy-pos-medicine-search"><label class="pharmacy-pos-search"><span aria-hidden="true">⌕</span><input id="pharmacyPosMedicineSearch" type="search" placeholder="Search medicine to add to bill..." /></label><div class="pharmacy-pos-suggestions hidden" id="pharmacyPosMedicineSuggestions"></div></div>
+                  </article>
+                </div>
+                <aside class="pharmacy-card pharmacy-pos-invoice">
+                  <div class="pharmacy-pos-invoice-heading"><div><h2>Invoice</h2><p id="pharmacyPosInvoiceDate"></p></div><span class="pharmacy-pos-clinic-tag" id="pharmacyPosClinicTag">CSK CLINIC</span></div>
+                  <p class="pharmacy-pos-tax-note">GST: <b>Included in MRP</b></p>
+                  <dl class="pharmacy-pos-totals"><div><dt>Taxable value</dt><dd id="pharmacyPosSubtotal">₹0.00</dd></div><div><dt>CGST (incl.)</dt><dd>₹0.00</dd></div><div><dt>SGST (incl.)</dt><dd>₹0.00</dd></div><div><dt>Discount</dt><dd><input id="pharmacyPosDiscount" type="number" min="0" step="0.01" value="0" aria-label="Discount" /></dd></div><div class="pharmacy-pos-roundoff"><dt>Round off</dt><dd>₹0.00</dd></div><div class="pharmacy-pos-grand-total"><dt>Grand Total</dt><dd id="pharmacyPosGrandTotal">₹0</dd></div></dl>
+                  <div class="pharmacy-pos-payment"><h3>Payment mode</h3><div role="group" aria-label="Payment mode"><button type="button" class="active" data-pos-payment="Cash" aria-pressed="true">Cash</button><button type="button" data-pos-payment="UPI" aria-pressed="false">UPI</button><button type="button" data-pos-payment="Card" aria-pressed="false">Card</button></div></div>
+                  <p class="pharmacy-pos-payment-note">Collection will be recorded on the clinic invoice using the selected payment method.</p>
+                  <button type="button" class="button button-primary pharmacy-pos-collect" id="pharmacyPosCollect">Collect ₹0 &amp; Print Bill</button>
+                  <button type="button" class="pharmacy-pos-view-sales" data-pharmacy-tab="sales">View sales</button>
+                </aside>
+              </div>
+            </div>
+            <div class="pharmacy-tab-panel hidden" id="pharmacySales" role="tabpanel">
+              <div class="pharmacy-heading"><div><p class="eyebrow">PHARMACY TRANSACTIONS</p><div class="pharmacy-title" role="heading" aria-level="1">Sales</div><p class="muted">Medicine items matched from clinic invoices.</p></div><button type="button" class="button button-primary" data-pharmacy-tab="pos">＋ New sale</button></div>
+              <div class="pharmacy-metric-row pharmacy-metric-row-secondary"><article class="pharmacy-metric-card"><span>Medicine invoices</span><b id="pharmacySalesCount">0</b><small>Invoices with matched medicines</small></article><article class="pharmacy-metric-card"><span>Medicine sales</span><b id="pharmacySalesTotal">₹0.00</b><small>Matched invoice items</small></article><article class="pharmacy-metric-card"><span>Payments allocated</span><b id="pharmacySalesPaid">₹0.00</b><small>Proportional estimate</small></article></div>
+              <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Recent medicine sales</h2><p>Paid amounts are allocated by medicine sales share of each invoice.</p></div></div><div id="pharmacySalesList" class="pharmacy-list"></div></article>
+            </div>
+            <div class="pharmacy-tab-panel hidden" id="pharmacyOrders" role="tabpanel">
+              <div class="pharmacy-heading"><div><p class="eyebrow">ORDER MANAGEMENT</p><div class="pharmacy-title" role="heading" aria-level="1">Online orders</div><p class="muted">Track orders received by phone, website, or messaging channels.</p></div><button type="button" class="button button-primary" data-new-pharmacy-order>＋ Record order</button></div>
+              <article class="pharmacy-card"><div class="table-scroll"><table><thead><tr><th>Order</th><th>Patient</th><th>Channel</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pharmacyOrdersTable"></tbody></table></div><div class="empty-state hidden" id="pharmacyOrdersEmpty"><b>No pharmacy orders yet</b><p>Record an order received through your configured channel.</p></div></article>
+            </div>
+            <div class="pharmacy-tab-panel hidden" id="pharmacyPurchases" role="tabpanel">
+              <div class="pharmacy-heading"><div><p class="eyebrow">PROCUREMENT</p><div class="pharmacy-title" role="heading" aria-level="1">Purchases &amp; Suppliers</div><p class="muted">Purchase orders, partial goods receipts, and supplier records.</p></div><div class="table-actions"><button type="button" class="button button-light" data-new-supplier>＋ Add supplier</button><button type="button" class="button button-primary" data-new-purchase-order>＋ New purchase order</button></div></div>
+              <div class="pharmacy-metric-row pharmacy-metric-row-secondary"><article class="pharmacy-metric-card"><span>Open Purchase Orders</span><b id="purchaseOpenCount">0</b><small>Orders awaiting full receipt</small></article><article class="pharmacy-metric-card"><span>Pending GRN</span><b id="purchasePendingLines">0</b><small>Lines awaiting receipt</small></article><article class="pharmacy-metric-card"><span>Outstanding (ordered)</span><b id="purchaseOutstandingValue">₹0.00</b><small>Value not yet received</small></article><article class="pharmacy-metric-card"><span>This Month Purchases</span><b id="purchaseMonthValue">₹0.00</b><small>Goods received this month</small></article></div>
+              <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Purchase orders</h2><p>Receipts update medicine stock and are recorded in stock history.</p></div></div><div class="table-scroll"><table><thead><tr><th>Order</th><th>Supplier</th><th>Created</th><th>Lines</th><th>Ordered</th><th>Status</th><th>Actions</th></tr></thead><tbody id="purchaseOrdersTable"></tbody></table></div><div class="empty-state hidden" id="purchaseOrdersEmpty"><b>No purchase orders yet</b><p>Add a supplier, then create an order for active inventory items.</p></div></article>
+              <article class="pharmacy-card"><div class="pharmacy-card-heading"><div><h2>Suppliers</h2><p>Clinic suppliers and their purchase-order history.</p></div></div><div class="table-scroll"><table><thead><tr><th>Supplier</th><th>Contact</th><th>Phone</th><th>Orders</th><th>Status</th><th>Actions</th></tr></thead><tbody id="suppliersTable"></tbody></table></div><div class="empty-state hidden" id="suppliersEmpty"><b>No suppliers registered</b><p>Create a supplier record to place purchase orders.</p></div></article>
+            </div>
+            <div class="pharmacy-tab-panel hidden pharmacy-inventory" id="pharmacyInventory" role="tabpanel">
+              <div class="page-heading"><div><p class="eyebrow">PHARMACY INVENTORY</p><h1>Inventory &amp; Stock</h1><p class="muted">Add medicines, track quantities, prices and expiry dates.</p></div><button class="button button-primary" id="addMedicineButton" data-open-modal="medicineModal">＋ Add medicine</button></div>
+              <div class="stats-grid compact-stats"><article class="stat-card"><div class="stat-top"><span>Medicine products</span><span class="stat-icon blue">✚</span></div><strong id="medicineCount">0</strong><div class="stat-foot"><span class="stat-note">In inventory</span></div></article><article class="stat-card"><div class="stat-top"><span>Low stock</span><span class="stat-icon orange">!</span></div><strong id="medicineLowCount">0</strong><div class="stat-foot"><span class="stat-note">At or below reorder level</span></div></article><article class="stat-card"><div class="stat-top"><span>Inventory value</span><span class="stat-icon green">₹</span></div><strong id="inventoryValue">₹0</strong><div class="stat-foot"><span class="stat-note">Based on unit purchase cost</span></div></article></div>
+              <article class="panel table-panel"><div class="table-toolbar"><div><h2>Medicine inventory</h2><p>Use stock controls when medicines arrive or are dispensed.</p></div><div class="table-actions"><label class="table-search"><span>⌕</span><input id="medicineSearch" placeholder="Search name, category, batch" /></label><select class="select-control" id="medicineStockFilter" aria-label="Filter medicine stock"><option value="">All stock</option><option value="low">Low stock</option><option value="expired">Expired / expiring</option></select></div></div><div class="table-scroll"><table><thead><tr><th>Medicine</th><th>Category</th><th>Batch / expiry</th><th>Quantity</th><th>Reorder at</th><th>Sell price</th><th>Status</th><th>Actions</th></tr></thead><tbody id="medicinesTable"></tbody></table></div><div class="empty-state hidden" id="medicinesEmpty"><span>✚</span><b>No medicines found</b><p>Add medicines to start managing your stock.</p></div></article>
+            </div>
+            <div class="pharmacy-tab-panel hidden" id="pharmacyProfit" role="tabpanel">
+              <div class="pharmacy-heading"><div><p class="eyebrow">PHARMACY PERFORMANCE</p><div class="pharmacy-title" role="heading" aria-level="1">Profit &amp; Loss</div><p class="muted">Product margin estimate from recognized medicine sales and recorded costs.</p></div></div>
+              <div class="pharmacy-profit-grid"><article class="pharmacy-card"><h2>Revenue → Product margin</h2><div id="pharmacyProfitBars"></div></article><article class="pharmacy-card"><h2>Profit summary</h2><div id="pharmacyProfitSummary"></div></article></div>
+              <article class="pharmacy-card pharmacy-profit-note">Estimates include medicine invoice lines matched to inventory products. Clinic service charges and items without a recorded purchase cost are excluded.</article>
+            </div>
+            <div class="pharmacy-tab-panel hidden" id="pharmacyReports" role="tabpanel">
+              <div class="pharmacy-heading"><div><p class="eyebrow">PHARMACY REPORTS</p><div class="pharmacy-title" role="heading" aria-level="1">Reports</div><p class="muted">Open a pharmacy report built from clinic records.</p></div><button type="button" class="button button-primary" data-pharmacy-report-print="overall">Print overall report</button></div>
+              <div class="pharmacy-report-grid">
+                <article class="pharmacy-card"><span class="pharmacy-report-icon">▤</span><h2>Sales Register</h2><p>Clinic invoice and payment history.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-pharmacy-tab="sales">Open</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="sales">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon violet">↗</span><h2>Profit &amp; Loss</h2><p>Estimated margin on recognized medicine sales.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-pharmacy-tab="profit">Open</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="profit">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon orange">◇</span><h2>Stock Statement</h2><p>Current pharmacy inventory and value.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-pharmacy-tab="inventory">Open</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="stock">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon red">◷</span><h2>Expiry Report</h2><p>Near-expiry and expired medicine batches.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-pharmacy-tab="inventory" data-pharmacy-filter="expired">Open</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="expiry">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon green">▤</span><h2>Purchase Register</h2><p>Purchase records are not configured yet.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-pharmacy-tab="purchases">Open</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="purchases">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon violet">▤</span><h2>Supplier Ledger</h2><p>Print supplier contacts and purchase history. Supplier payment balances are not tracked.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-pharmacy-tab="purchases">Open</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="suppliers">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon blue">₹</span><h2>GST Summary</h2><p>Tax summaries from clinic invoices.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-go="reports">Open clinic reports</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="gst">Print</button></div></article>
+                <article class="pharmacy-card"><span class="pharmacy-report-icon">♙</span><h2>Customer Report</h2><p>Patient purchase history from clinic invoices.</p><div class="pharmacy-report-actions"><button type="button" class="button button-light" data-go="billing">Open billing</button><button type="button" class="button button-light pharmacy-report-print" data-pharmacy-report-print="customers">Print</button></div></article>
+              </div>
+            </div>
           </section>
 
           <section class="view" id="consumables">
@@ -207,72 +454,98 @@
             </div>
           </section>
 
-          <section class="view" id="settings"><div class="page-heading"><div><p class="eyebrow">WORKSPACE</p><h1>Clinic settings</h1><p class="muted">Clinic and practitioner details appear on printed billing documents.</p></div></div><article class="panel settings-panel"><form id="settingsForm" class="form-grid"><label>Clinic name<input name="clinicName" maxlength="100" required /></label><label>Clinic phone<input name="phone" maxlength="30" /></label><label>Clinic email<input name="email" type="email" maxlength="120" /></label><label>Clinic address<input name="address" maxlength="200" /></label><label>Practitioner name<input name="practitioner" maxlength="100" placeholder="e.g. Dr. Meera Nair" /></label><label>Medical registration number<input name="registration" maxlength="60" /></label><label>Clinic tax / GST number<input name="taxId" maxlength="40" /></label><label>Currency<select name="currency"><option value="INR">Indian Rupee (₹)</option></select></label><label class="form-full">Invoice footer / payment terms<input name="invoiceFooter" maxlength="200" placeholder="e.g. Thank you. Payment due on receipt." /></label><div class="form-actions"><button class="button button-primary" type="submit">Save clinic details</button></div></form><div class="api-status-card" style="margin-top: 1.25rem; border: 1px solid #dfe7f3; border-radius: 16px; padding: 1rem 1.1rem; background: #f8fbff;"><div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;"><div><p class="eyebrow" style="margin-bottom: 0.25rem;">API CONNECTION</p><strong id="apiConnectionLabel">Local demo mode</strong></div><div style="display: flex; gap: 0.75rem; flex-wrap: wrap;"><button class="button button-primary" type="button" id="apiConnectButton">Connect to API</button><button class="button button-light hidden" type="button" id="apiDisconnectButton">Disconnect</button></div></div></div></article><p class="data-caption warning-caption">Important: clinic branding settings are stored in this browser. Live patient, medicine, appointment and billing records require the API connection; complete secure backups, session management and operational controls before production use.</p></section>
+          <section class="view" id="settings"><div class="page-heading"><div><p class="eyebrow">WORKSPACE</p><h1>Clinic settings</h1><p class="muted">Clinic details and clinician-approved vital reference ranges.</p></div></div><article class="panel settings-panel"><form id="settingsForm" class="form-grid"><label>Clinic name<input name="clinicName" maxlength="100" required /></label><label>Clinic phone<input name="phone" maxlength="30" /></label><label>Clinic email<input name="email" type="email" maxlength="120" /></label><label>Clinic address<input name="address" maxlength="200" /></label><label>Practitioner name<input name="practitioner" maxlength="100" placeholder="e.g. Dr. Meera Nair" /></label><label>Medical registration number<input name="registration" maxlength="60" /></label><label>Clinic tax / GST number<input name="taxId" maxlength="40" /></label><label>Currency<select name="currency"><option value="INR">Indian Rupee (₹)</option></select></label><label class="form-full">Invoice footer / payment terms<input name="invoiceFooter" maxlength="200" placeholder="e.g. Thank you. Payment due on receipt." /></label><div class="form-actions"><button class="button button-primary" type="submit">Save clinic details</button></div></form><div class="api-status-card" style="margin-top: 1.25rem; border: 1px solid #dfe7f3; border-radius: 16px; padding: 1rem 1.1rem; background: #f8fbff;"><div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;"><div><p class="eyebrow" style="margin-bottom: 0.25rem;">API CONNECTION</p><strong id="apiConnectionLabel">Local demo mode</strong></div><div style="display: flex; gap: 0.75rem; flex-wrap: wrap;"><button class="button button-primary" type="button" id="apiConnectButton">Connect to API</button><button class="button button-light hidden" type="button" id="apiDisconnectButton">Disconnect</button></div></div></div></article><article class="panel vital-reference-range-panel" id="vitalReferenceRangePanel"><div class="panel-heading"><div><h2>Age-specific vital reference ranges</h2><p>Only configured metrics are classified. Use clinic-approved values; no clinical defaults are supplied.</p></div><button class="button button-light button-small" type="button" id="addVitalReferenceRange">＋ Add range</button></div><div class="table-scroll"><table><thead><tr><th>Metric</th><th>Minimum age (years)</th><th>Maximum age (years)</th><th>Low threshold</th><th>High threshold</th><th>Unit</th><th>Remove</th></tr></thead><tbody id="vitalReferenceRangesBody"></tbody></table></div><p class="field-help">Age bounds are inclusive. The lower and upper thresholds are clinician-configured; values outside them are highlighted for review, not diagnosis.</p></article><p class="data-caption warning-caption">Important: live clinic settings and reference ranges require an administrator account. The application stores normalized readings and retains the original input units.</p></section>
         </div>
       </main>
     </div>
 
     <div class="modal-backdrop hidden" id="patientModal" role="dialog" aria-modal="true" aria-labelledby="patientModalTitle">
-      <div class="modal modal-patient">
-        <div class="modal-header">
-          <div><p class="eyebrow">PATIENT REGISTRATION</p><h2 id="patientModalTitle">Register patient</h2><p class="patient-modal-description">Capture the essentials first. You can add medical details now or save a draft.</p></div>
-          <button class="modal-close" data-close-modal aria-label="Close">×</button>
+      <div class="modal modal-patient patient-registration-modal">
+        <div class="modal-header patient-registration-header">
+          <div><button type="button" class="patient-back-link" data-close-modal>← Back to all patients</button><p class="eyebrow">PATIENT REGISTRATION</p><h2 id="patientModalTitle">Register patient</h2><p class="patient-modal-description">Enter accurate details to create a secure, permanent patient record.</p></div>
+          <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
         </div>
-        <div class="patient-stepper" aria-label="Patient registration steps">
-          <button type="button" class="patient-step-indicator active" data-patient-step="0" aria-current="step"><span>1</span> Personal</button>
-          <button type="button" class="patient-step-indicator" data-patient-step="1"><span>2</span> Contact</button>
-          <button type="button" class="patient-step-indicator" data-patient-step="2"><span>3</span> Health background</button>
-        </div>
-        <div class="patient-identity-preview">
-          <div><small>Patient ID</small><strong id="patientCodePreview">Assigned on save</strong></div>
-          <div><small>Registration</small><strong id="patientRegistrationPreview">Today</strong></div>
-          <output id="patientAgePreview" aria-live="polite">Age calculated from date of birth</output>
-        </div>
-        <form id="patientForm">
+        <form id="patientForm" class="patient-registration-form">
           <input type="hidden" name="id" />
           <input type="hidden" name="draftId" />
-          <section class="patient-form-step" data-patient-step-panel="0">
-            <div class="patient-form-section"><h3>Personal details</h3><p>Fields marked <span>*</span> are required to create a patient record.</p></div>
-            <div class="form-grid">
-              <label>Full name <span>*</span><input name="name" required minlength="2" maxlength="160" autocomplete="name" list="patientNameSuggestions" placeholder="Patient's legal name" aria-describedby="patientNameError" /><small id="patientNameError" class="patient-field-error hidden" aria-live="polite"></small><datalist id="patientNameSuggestions"></datalist></label>
-              <label>Mobile number <span>*</span><input name="phone" type="tel" required minlength="7" maxlength="20" pattern="[+0-9()\ -]{7,20}" inputmode="tel" autocomplete="tel" list="patientPhoneSuggestions" placeholder="+91 90000 00000" aria-describedby="patientPhoneError" /><small id="patientPhoneError" class="patient-field-error hidden" aria-live="polite"></small><datalist id="patientPhoneSuggestions"></datalist></label>
-              <label>Date of birth<input name="dob" type="date" autocomplete="bday" /></label>
-              <label>Gender<select name="gender"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option><option>Unspecified</option></select></label>
-              <div id="patientDuplicateWarning" class="patient-duplicate-warning hidden form-full" role="alert"></div>
-              <div class="form-actions"><span class="patient-step-help">You can search for an existing patient by name, mobile or Patient ID in the directory.</span><button type="button" class="button button-primary" data-patient-next="1">Continue to contact details →</button></div>
+          <input type="hidden" name="name" />
+          <input type="hidden" name="emergencyContact" />
+          <input type="hidden" name="profilePhotoDataUrl" />
+          <div class="patient-registration-layout">
+            <aside class="patient-registration-aside">
+              <div class="patient-photo-card">
+                <div class="patient-photo-preview" id="patientPhotoPreview"><span id="patientPhotoInitials">PT</span></div>
+                <h3 id="patientPhotoName">New patient</h3>
+                <p id="patientPhotoCaption">Add a clear profile photo</p>
+                <label class="button button-light patient-photo-upload" for="patientPhotoFile">Upload photo</label>
+                <input id="patientPhotoFile" name="profilePhotoFile" type="file" accept="image/jpeg,image/png,image/webp" />
+                <button class="patient-photo-remove hidden" type="button" id="removePatientPhoto">Remove photo</button>
+                <small>JPG, PNG or WebP · optimized to a small thumbnail</small>
+              </div>
+              <div class="patient-quick-info">
+                <h3>Quick information</h3>
+                <div><small>Patient ID</small><strong id="patientCodePreview">Assigned automatically</strong></div>
+                <div><small>Registration date</small><strong id="patientRegistrationPreview">Today</strong></div>
+                <div><small>Age</small><strong id="patientAgePreview" aria-live="polite">Calculated from date of birth</strong></div>
+                <div><small>Patient type</small><strong id="patientTypePreview">New patient</strong></div>
+              </div>
+              <div class="patient-registration-alert"><b>Privacy reminder</b><p>Confirm sensitive information with the patient before saving.</p></div>
+            </aside>
+            <div class="patient-registration-main">
+              <section class="patient-form-step patient-form-section-card" data-patient-step-panel="0">
+                <div class="patient-form-section"><span>01</span><div><h3>Personal information</h3><p>Identity details used for the patient’s permanent clinic record.</p></div></div>
+                <div class="patient-registration-fields">
+                  <label>First name <span>*</span><input name="firstName" required minlength="2" maxlength="120" autocomplete="given-name" list="patientNameSuggestions" placeholder="First name" aria-describedby="patientNameError" /><small id="patientNameError" class="patient-field-error hidden" aria-live="polite"></small><datalist id="patientNameSuggestions"></datalist></label>
+                  <label>Last name<input name="lastName" maxlength="120" autocomplete="family-name" placeholder="Last name" /></label>
+                  <label>Date of birth<input name="dob" type="date" autocomplete="bday" /></label>
+                  <label>Gender <span>*</span><select name="gender" required><option value="">Select gender</option><option>Female</option><option>Male</option><option>Other</option><option>Unspecified</option></select></label>
+                  <label>Blood group<select name="bloodGroup"><option value="">Not provided</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label>
+                  <label>Marital status<select name="maritalStatus"><option value="">Not provided</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Prefer not to say</option></select></label>
+                  <label>Relation to account<select name="relationToAccount"><option value="">Self / not specified</option><option>Self</option><option>Child</option><option>Spouse</option><option>Parent</option><option>Other dependent</option></select></label>
+                  <div id="patientDuplicateWarning" class="patient-duplicate-warning hidden patient-form-full" role="alert"></div>
+                </div>
+              </section>
+              <section class="patient-form-step patient-form-section-card" data-patient-step-panel="1">
+                <div class="patient-form-section"><span>02</span><div><h3>Contact details</h3><p>Use current contact information for appointment and care coordination.</p></div></div>
+                <div class="patient-registration-fields">
+                  <label>Mobile number <span>*</span><input name="phone" type="tel" required maxlength="20" pattern="(?:\+91[\s-]?)?[6-9](?:[\s-]?[0-9]){9}" inputmode="tel" autocomplete="tel" list="patientPhoneSuggestions" placeholder="+91 98765 43210" aria-describedby="patientPhoneError" /><small id="patientPhoneError" class="patient-field-error hidden" aria-live="polite"></small><datalist id="patientPhoneSuggestions"></datalist></label>
+                  <label>Email address<input name="email" type="email" maxlength="120" autocomplete="email" placeholder="name@example.com" /></label>
+                  <label class="patient-form-full">Address<input name="address" maxlength="500" autocomplete="street-address" placeholder="House number, street and area" /></label>
+                  <label>City<input name="city" maxlength="100" autocomplete="address-level2" placeholder="City" /></label>
+                  <label>State<input name="state" maxlength="100" autocomplete="address-level1" placeholder="State" /></label>
+                  <label>Pincode<input name="postalCode" inputmode="numeric" maxlength="10" pattern="[A-Za-z0-9 -]{0,10}" autocomplete="postal-code" placeholder="Postal code" /></label>
+                </div>
+              </section>
+              <section class="patient-form-step patient-form-section-card" data-patient-step-panel="2">
+                <div class="patient-form-section"><span>03</span><div><h3>Medical information</h3><p>Record known alerts and existing health context; visit details remain in the clinical timeline.</p></div></div>
+                <div class="patient-registration-fields">
+                  <label class="patient-form-full">Known allergies<textarea name="notes" rows="2" maxlength="2000" placeholder="Known allergies and reactions"></textarea></label>
+                  <label class="patient-form-full">Chronic conditions<textarea name="medicalHistory" rows="2" maxlength="4000" placeholder="Long-term conditions and relevant medical history"></textarea></label>
+                  <label class="patient-form-full">Current medications<textarea name="currentMedications" rows="2" maxlength="4000" placeholder="Current medicines, if known"></textarea></label>
+                  <label>Occupation<input name="occupation" maxlength="120" placeholder="Occupation" /></label>
+                  <label>Preferred language<input name="preferredLanguage" maxlength="80" placeholder="e.g. Tamil, English" /></label>
+                  <label class="patient-form-full">Previous treatment / surgery<textarea name="surgicalHistory" rows="2" maxlength="4000" placeholder="Relevant previous treatment or surgery"></textarea></label>
+                  <label class="patient-form-full">Family medical history<textarea name="familyHistory" rows="2" maxlength="4000" placeholder="Relevant family conditions and relationship"></textarea></label>
+                </div>
+              </section>
+              <section class="patient-form-step patient-form-section-card" data-patient-step-panel="3">
+                <div class="patient-form-section"><span>04</span><div><h3>Emergency contact &amp; insurance</h3><p>Optional information to help coordinate care and coverage.</p></div></div>
+                <div class="patient-registration-fields">
+                  <label>Emergency contact name<input name="emergencyContactName" maxlength="160" placeholder="Contact name" /></label>
+                  <label>Relationship<input name="emergencyContactRelationship" maxlength="80" placeholder="Relationship to patient" /></label>
+                  <label>Emergency phone<input name="emergencyPhone" type="tel" maxlength="20" pattern="(?:\+91[\s-]?)?[6-9](?:[\s-]?[0-9]){9}" inputmode="tel" placeholder="+91 98765 43210" /></label>
+                  <label>Insurance provider<input name="insuranceProvider" maxlength="160" placeholder="Provider or scheme" /></label>
+                  <label>Policy number<input name="insuranceNumber" maxlength="80" placeholder="Policy number" /></label>
+                  <label>Sum insured (₹)<input name="insuranceSumInsured" type="number" min="0" max="9999999999" step="0.01" placeholder="0.00" /></label>
+                </div>
+              </section>
             </div>
-          </section>
-          <section class="patient-form-step hidden" data-patient-step-panel="1">
-            <div class="patient-form-section"><h3>Contact information</h3><p>Use a reliable contact so staff can coordinate appointments and follow-ups.</p></div>
-            <div class="form-grid">
-              <label>Email<input name="email" type="email" maxlength="120" autocomplete="email" placeholder="name@example.com" /></label>
-              <label>Emergency contact<input name="emergencyContact" maxlength="160" autocomplete="tel" placeholder="Name and mobile number" /></label>
-              <label>Occupation<input name="occupation" maxlength="120" placeholder="e.g. Teacher, Driver, Student" /></label>
-              <label>Marital status<select name="maritalStatus"><option value="">Not provided</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option><option>Prefer not to say</option></select></label>
-              <label>Preferred language<input name="preferredLanguage" maxlength="80" placeholder="e.g. English, Tamil" /></label>
-              <label>Blood group<select name="bloodGroup"><option value="">Not provided</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label>
-              <label>Insurance provider<input name="insuranceProvider" maxlength="160" placeholder="Provider or scheme name" /></label>
-              <label>Insurance / policy number<input name="insuranceNumber" maxlength="80" placeholder="Policy number" /></label>
-              <label class="form-full">Address<input name="address" maxlength="500" autocomplete="street-address" placeholder="House / street, town or city, district" /></label>
-              <div class="form-actions"><button type="button" class="button button-light" data-patient-previous="0">← Personal details</button><button type="button" class="button button-primary" data-patient-next="2">Continue to health background →</button></div>
-            </div>
-          </section>
-          <section class="patient-form-step hidden" data-patient-step-panel="2">
-            <div class="patient-form-section"><h3>Health background</h3><p>Record known information only. Clinical visits, prescriptions, vitals and reports are saved separately in the visit timeline.</p></div>
-            <div class="form-grid">
-              <label class="form-full">Allergies and reactions<textarea name="notes" rows="3" maxlength="2000" placeholder="List known medicine, food or other allergies; include the reaction when known."></textarea></label>
-              <label class="form-full">Existing conditions and previous medical history<textarea name="medicalHistory" rows="3" maxlength="4000" placeholder="Long-term conditions and significant previous illnesses."></textarea></label>
-              <label class="form-full">Surgical history<textarea name="surgicalHistory" rows="2" maxlength="4000" placeholder="Previous surgeries, procedures and approximate dates."></textarea></label>
-              <label class="form-full">Family medical history<textarea name="familyHistory" rows="2" maxlength="4000" placeholder="Relevant family conditions and relationship, if known."></textarea></label>
-              <label class="form-full">Current medications<textarea name="currentMedications" rows="2" maxlength="4000" placeholder="Medicines the patient currently takes, including dose when known."></textarea></label>
-              <div class="patient-sensitive-note form-full">Please verify sensitive health information with the patient before saving.</div>
-              <div class="form-actions"><button type="button" class="button button-light" data-patient-previous="1">← Contact details</button><span></span></div>
-            </div>
-          </section>
+          </div>
           <div class="patient-form-footer">
             <button type="button" class="button button-light" data-close-modal>Cancel</button>
             <button type="button" class="button button-light" id="savePatientDraft">Save draft</button>
-            <button class="button button-light" type="submit" name="saveAction" value="continue" data-save-action="continue">Save &amp; Continue</button>
+            <button class="button button-light" type="submit" name="saveAction" value="continue" data-save-action="continue">Save &amp; open profile</button>
+            <button class="button button-light" type="submit" name="saveAction" value="assign" data-save-action="assign">Save &amp; assign doctor</button>
             <button class="button button-primary" type="submit" name="saveAction" value="save">Save patient</button>
           </div>
         </form>
@@ -295,6 +568,11 @@
     </div>
 
     <div class="modal-backdrop hidden" id="medicineModal" role="dialog" aria-modal="true" aria-labelledby="medicineModalTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">PHARMACY STOCK</p><h2 id="medicineModalTitle">Add medicine</h2></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><form id="medicineForm" class="form-grid"><input type="hidden" name="id" /><label>Medicine name <span>*</span><input name="name" required maxlength="120" /></label><label>Category<input name="category" maxlength="60" placeholder="e.g. Antibiotic" /></label><label>Brand<input name="brand" maxlength="100" /></label><label>Manufacturer<input name="manufacturer" maxlength="160" /></label><label>Strength / product size<input name="productSize" maxlength="100" placeholder="e.g. 500 mg, 10 tablets" /></label><label>Supplier<input name="supplier" maxlength="160" /></label><label>Batch number<input name="batch" maxlength="40" /></label><label>Expiry date<input name="expiry" type="date" /></label><label>Quantity in stock <span>*</span><input name="quantity" type="number" min="0" step="1" required /></label><label>Reorder level<input name="reorder" type="number" min="0" step="1" value="10" /></label><label>Purchase cost / unit (₹) <span>*</span><input name="cost" type="number" min="0" step="0.01" required /></label><label>Selling price / unit (₹) <span>*</span><input name="price" type="number" min="0" step="0.01" required /></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save medicine</button></div></form></div></div>
+
+    <div class="modal-backdrop hidden" id="supplierModal" role="dialog" aria-modal="true" aria-labelledby="supplierModalTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">SUPPLIER DIRECTORY</p><h2 id="supplierModalTitle">Add supplier</h2></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div><form id="supplierForm" class="form-grid"><label class="form-full">Supplier name <span>*</span><input name="name" maxlength="160" required /></label><label>Contact person<input name="contactName" maxlength="120" /></label><label>Phone<input name="phone" maxlength="40" /></label><label>Email<input name="email" type="email" maxlength="160" /></label><label>Tax / GST ID<input name="taxId" maxlength="40" /></label><label class="form-full">Address<textarea name="address" rows="2" maxlength="400"></textarea></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save supplier</button></div></form></div></div>
+    <div class="modal-backdrop hidden" id="purchaseOrderModal" role="dialog" aria-modal="true" aria-labelledby="purchaseOrderModalTitle"><div class="modal modal-wide"><div class="modal-header"><div><p class="eyebrow">PROCUREMENT</p><h2 id="purchaseOrderModalTitle">New purchase order</h2><p class="patient-modal-description">Choose active medicine batches already in inventory. Goods receipts add stock and retain an audit trail.</p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div><form id="purchaseOrderForm"><div class="form-grid"><label>Supplier <span>*</span><select name="supplierId" required></select></label><label>Expected delivery<input name="expectedAt" type="date" /></label><label class="form-full">Notes<input name="notes" maxlength="500" /></label></div><div class="invoice-items-heading"><div><h3>Order lines</h3></div><button type="button" class="button button-light button-small" id="addPurchaseOrderLine">＋ Add medicine</button></div><div class="invoice-lines purchase-order-lines" id="purchaseOrderLines"></div><p class="muted" id="purchaseOrderTotal">Order total: ₹0.00</p><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Create purchase order</button></div></form></div></div>
+    <div class="modal-backdrop hidden" id="purchaseReceiptModal" role="dialog" aria-modal="true" aria-labelledby="purchaseReceiptModalTitle"><div class="modal modal-wide"><div class="modal-header"><div><p class="eyebrow">GOODS RECEIPT</p><h2 id="purchaseReceiptModalTitle">Receive stock</h2><p class="patient-modal-description">Record only quantities physically received. Partial receipts are supported.</p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div><form id="purchaseReceiptForm"><input type="hidden" name="purchaseOrderId" /><input type="hidden" name="idempotencyKey" /><label>Supplier document / invoice number<input name="supplierDocumentNumber" maxlength="100" /></label><div id="purchaseReceiptLines" class="purchase-receipt-lines"></div><label>Receipt notes<input name="notes" maxlength="500" /></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Receive selected quantities</button></div></form></div></div>
+    <div class="modal-backdrop hidden" id="pharmacyOrderModal" role="dialog" aria-modal="true" aria-labelledby="pharmacyOrderModalTitle"><div class="modal modal-wide"><div class="modal-header"><div><p class="eyebrow">PHARMACY ORDER</p><h2 id="pharmacyOrderModalTitle">Record external order</h2><p class="patient-modal-description">Staff-entered orders from phone, website, or messaging channels. Stock is not reserved or deducted here; create the invoice separately in clinic billing.</p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div><form id="pharmacyOrderForm"><div class="form-grid"><label class="form-full">Registered patient <span>*</span><select name="patientId" required></select></label><label>Order channel<select name="channel"><option value="PHONE">Phone</option><option value="WEBSITE">Website</option><option value="MESSAGING">Messaging</option><option value="OTHER">Other</option></select></label><label class="form-full">Order notes<input name="notes" maxlength="500" /></label></div><div class="invoice-items-heading"><div><h3>Requested medicines</h3></div><button type="button" class="button button-light button-small" id="addPharmacyOrderLine">＋ Add medicine</button></div><div class="invoice-lines purchase-order-lines" id="pharmacyOrderLines"></div><p class="muted" id="pharmacyOrderTotal">Order estimate: ₹0.00</p><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Record order</button></div></form></div></div>
 
     <div class="modal-backdrop hidden" id="consumableModal" role="dialog" aria-modal="true" aria-labelledby="consumableModalTitle">
       <div class="modal"><div class="modal-header"><div><p class="eyebrow">CLINICAL SUPPLY STOCK</p><h2 id="consumableModalTitle">Add clinical supply</h2></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div>
@@ -333,12 +611,110 @@
       </div>
     </div>
 
-    <div class="modal-backdrop hidden" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="appointmentModalTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">CLINIC SCHEDULE</p><h2 id="appointmentModalTitle">New appointment</h2></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><form id="appointmentForm" class="form-grid"><label class="form-full">Patient <span>*</span><select name="patientId" required></select></label><label id="localDoctorField">Doctor name<input name="doctor" required maxlength="100" placeholder="e.g. Dr. Meera Nair" /></label><label id="apiDoctorField" class="hidden">Doctor<select name="doctorId" id="appointmentDoctorApi"><option value="">Select doctor</option></select></label><label id="localDepartmentField">Department<input name="department" maxlength="80" placeholder="e.g. General medicine" /></label><label>Date <span>*</span><input name="date" type="date" required /></label><label id="localTimeField">Time <span>*</span><input name="time" type="time" required /></label><label id="apiSlotField" class="hidden">Available time <span>*</span><select name="slotId" id="appointmentSlotApi"><option value="">Select a doctor and date first</option></select></label><div id="apiSlotCreatePanel" class="form-full hidden"><p class="muted">No suitable slot? Add a future availability time for the selected doctor and date.</p><div class="form-grid"><label>Start time<input type="time" id="appointmentSlotStart" /></label><label>End time<input type="time" id="appointmentSlotEnd" /></label></div><button class="button button-light button-small" type="button" id="createAppointmentSlot">＋ Add availability</button></div><label class="form-full">Visit reason<input name="reason" maxlength="200" /></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save appointment</button></div></form></div></div>
+    <div class="modal-backdrop hidden" id="checkInModal" role="dialog" aria-modal="true" aria-labelledby="checkInModalTitle">
+      <div class="modal modal-wide">
+        <div class="modal-header"><div><p class="eyebrow">FRONT OFFICE · PATIENT CHECK-IN</p><h2 id="checkInModalTitle">Register visit &amp; assign doctor</h2><p class="muted">Patient details, vitals and assignment are saved together for the doctor’s queue.</p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div>
+        <form id="checkInForm" class="form-grid">
+          <input type="hidden" name="appointmentId" />
+          <label class="form-full">Find existing patient by Patient ID, name or mobile<input id="checkInPatientSearch" type="search" autocomplete="off" placeholder="Search ID, patient name or mobile number" /></label>
+          <label class="form-full">Patient <span>*</span><select name="patientId" id="checkInPatient" required></select></label>
+          <label>Assigned doctor <span>*</span><select name="doctorId" id="checkInDoctor" required></select></label>
+          <label>Department / specialization <input name="department" maxlength="100" value="General medicine" placeholder="e.g. General medicine" required /></label>
+          <label>Visit type<select name="encounterType"><option value="OPD">OPD</option><option value="IPD">IPD</option></select></label>
+          <label>Priority<select name="priority"><option value="NORMAL">Normal</option><option value="URGENT">Urgent</option><option value="EMERGENCY">Emergency</option></select></label>
+          <label class="form-full">Visit reason<input name="reason" maxlength="1000" placeholder="Reason for today’s visit" /></label>
+          <div class="form-full checkin-vitals-section">
+            <div class="checkin-vitals-heading"><div><h3>Basic vitals entry</h3><p>Original readings are preserved. Converted values are shown for reference.</p></div><span id="checkInPatientType" class="status-pill">Select patient</span></div>
+            <div class="form-grid checkin-vitals-grid">
+              <label>Systolic BP (mmHg)<input name="systolicMmHg" type="number" min="40" max="300" step="1" inputmode="numeric" /><small data-vital-status="systolicMmHg">Not recorded</small></label>
+              <label>Diastolic BP (mmHg)<input name="diastolicMmHg" type="number" min="20" max="200" step="1" inputmode="numeric" /><small data-vital-status="diastolicMmHg">Not recorded</small></label>
+              <label>Pulse rate (BPM)<input name="pulseBpm" type="number" min="20" max="300" step="1" inputmode="numeric" /><small data-vital-status="pulseBpm">Not recorded</small></label>
+              <label>Temperature<input name="temperatureValue" type="number" min="0" max="60" step="0.1" /><span class="vital-unit-select"><select name="temperatureUnit" aria-label="Temperature input unit"><option value="CELSIUS">°C</option><option value="FAHRENHEIT">°F</option></select></span><small id="checkInTemperatureConversion" class="field-help">Converted temperature appears here.</small><small data-vital-status="temperatureC">Not recorded</small></label>
+              <label>Respiratory rate (breaths/min)<input name="respiratoryRateBpm" type="number" min="0" max="200" step="1" inputmode="numeric" /><small data-vital-status="respiratoryRateBpm">Not recorded</small></label>
+              <label>SpO2 (%)<input name="spo2Percent" type="number" min="0" max="100" step="0.1" /><small data-vital-status="spo2Percent">Not recorded</small></label>
+              <div class="checkin-unit-field">
+                <label>Height input unit<select name="heightUnit"><option value="CENTIMETERS">Centimeters (cm)</option><option value="FEET_INCHES">Feet &amp; inches</option></select></label>
+                <div id="checkInHeightCmFields"><label>Height (cm)<input name="heightValue" type="number" min="20" max="300" step="0.1" /></label></div>
+                <div id="checkInHeightFeetFields" class="hidden"><label>Feet<input name="heightFeet" type="number" min="0" max="8" step="1" /></label><label>Inches<input name="heightInches" type="number" min="0" max="11.9" step="0.1" /></label></div>
+                <small id="checkInHeightConversion" class="field-help">Equivalent height appears here.</small><small data-vital-status="heightCm">Not recorded</small>
+              </div>
+              <div class="checkin-unit-field">
+                <label>Weight<input name="weightValue" type="number" min="0.1" max="1000" step="0.1" /></label>
+                <label>Weight input unit<select name="weightUnit"><option value="KILOGRAMS">Kilograms (kg)</option><option value="POUNDS">Pounds (lb)</option></select></label>
+                <small id="checkInWeightConversion" class="field-help">Equivalent weight appears here.</small><small data-vital-status="weightKg">Not recorded</small>
+              </div>
+              <label>CBG (mg/dL)<input name="cbgMgDl" type="number" min="0" max="2000" step="0.1" /><small data-vital-status="cbgMgDl">Not recorded</small></label>
+              <div class="checkin-bmi-card"><small>Calculated BMI</small><strong id="checkInBmi">—</strong><small data-vital-status="bmi">Not recorded</small></div>
+            </div>
+            <p id="checkInVitalReferenceNotice" class="field-help" aria-live="polite">Readings use only clinic-approved, age-specific ranges configured in Clinic settings. They do not diagnose or change readings.</p>
+          </div>
+          <div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Save vitals &amp; assign to doctor</button></div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-backdrop hidden" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="appointmentModalTitle">
+      <div class="modal appointment-modal">
+        <div class="modal-header">
+          <h2 id="appointmentModalTitle">New appointment</h2>
+          <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+        </div>
+        <form id="appointmentForm" class="appointment-form">
+          <section class="appointment-section">
+            <h3>PATIENT</h3>
+            <div class="patient-search-block">
+              <label for="appointmentPatientSearch">Find existing patient</label>
+              <div class="patient-search-control"><span aria-hidden="true">⌕</span><input id="appointmentPatientSearch" type="search" autocomplete="off" placeholder="Search by name, mobile or Patient ID..." /></div>
+              <p class="appointment-help">Pick a patient to auto-fill, or type a new mobile &amp; name below.</p>
+            </div>
+            <div class="appointment-grid appointment-grid-two">
+              <label>Mobile number <span>*</span><input name="patientMobile" type="tel" inputmode="tel" placeholder="+91  10-digit mobile" /></label>
+              <label>Patient name<select name="patientId" required aria-label="Patient name"></select></label>
+            </div>
+            <p class="appointment-help appointment-match-help">Existing patient is matched automatically.</p>
+          </section>
+
+          <section class="appointment-section appointment-section-fields">
+            <h3>APPOINTMENT</h3>
+            <div class="appointment-grid appointment-grid-three">
+              <label id="localDoctorField" class="appointment-grid-full">Doctor <span>*</span><input name="doctor" required maxlength="100" placeholder="Select doctor..." /></label>
+              <label id="apiDoctorField" class="appointment-grid-full hidden">Doctor <span>*</span><select name="doctorId" id="appointmentDoctorApi"><option value="">Select doctor...</option></select></label>
+              <label>Date <span>*</span><input name="date" type="date" required /></label>
+              <label id="localTimeField">Time <span>*</span><input name="time" type="time" required /></label>
+              <label id="apiSlotField" class="hidden">Time <span>*</span><select name="slotId" id="appointmentSlotApi"><option value="">Select a slot</option></select></label>
+              <label>Fee<input name="fee" type="text" inputmode="decimal" placeholder="Auto from doctor" /></label>
+            </div>
+            <div class="appointment-grid appointment-grid-two">
+              <label id="localDepartmentField">Type<input name="department" maxlength="80" placeholder="In-Clinic" /></label>
+              <label>Source<select name="source"><option value="Walk-in">Walk-in</option><option value="Call">Call</option><option value="Online">Online</option></select></label>
+            </div>
+            <label class="appointment-grid-full appointment-complaint">Chief complaint<textarea name="reason" maxlength="200" rows="2" placeholder="e.g. Fever &amp; cough 3 days"></textarea></label>
+            <div id="apiSlotCreatePanel" class="appointment-slot-create hidden">
+              <p class="appointment-help">No suitable slot? Add a future availability time for the selected doctor and date.</p>
+              <div class="appointment-grid appointment-grid-two"><label>Start time<input type="time" id="appointmentSlotStart" /></label><label>End time<input type="time" id="appointmentSlotEnd" /></label></div>
+              <button class="button button-light button-small" type="button" id="createAppointmentSlot">＋ Add availability</button>
+            </div>
+            <label class="appointment-toggle-row" for="appointmentArrived">
+              <span><b>Patient has arrived — check in now</b></span>
+              <input id="appointmentArrived" name="arrived" type="checkbox" role="switch" />
+            </label>
+            <label class="appointment-toggle-row" for="appointmentFeePaid">
+              <span><b>Mark fee &amp; services as paid (cash)</b></span>
+              <input id="appointmentFeePaid" name="feePaid" type="checkbox" role="switch" />
+            </label>
+          </section>
+          <div class="appointment-actions">
+            <button type="button" class="button button-light" data-close-modal>Cancel</button>
+            <button class="button button-primary" type="submit" aria-label="Save appointment">Book appointment</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="modal-backdrop hidden" id="patientRecordsModal" role="dialog" aria-modal="true" aria-labelledby="patientRecordsTitle">
       <div class="modal modal-wide">
         <div class="modal-header">
           <div><p class="eyebrow">CONFIDENTIAL CLINICAL RECORD</p><h2 id="patientRecordsTitle">Patient visit history</h2><p class="muted" id="patientRecordsSubtitle"></p></div>
-            <div style="display:flex;align-items:center;gap:.5rem">
+            <div class="patient-record-header-actions">
+              <button class="button button-primary button-small" type="button" id="newPatientEncounter">＋ Add OPD / IPD visit</button>
               <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
             </div>
         </div>
@@ -365,6 +741,279 @@
             <div class="archive-panel-heading"><p class="eyebrow">READ ONLY · ARCHIVED DATA</p><h3>Past intake records</h3><p>Previously saved nurse intake information is kept for reference and cannot be edited.</p></div>
             <div id="patientIntakeHistory" class="patient-intake-history"></div>
           </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="nurseIntakeModal" role="dialog" aria-modal="true" aria-labelledby="nurseIntakeTitle">
+      <div class="modal modal-wide">
+        <div class="modal-header"><div><p class="eyebrow">NURSING HANDOFF</p><h2 id="nurseIntakeTitle">Patient intake</h2><p class="muted" id="nurseIntakePatientContext"></p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div>
+        <form id="nurseIntakeForm">
+          <input type="hidden" name="queueTokenId" />
+          <div class="form-grid">
+            <label class="form-full">Chief complaint <span>*</span><input name="chiefComplaint" maxlength="1000" required /></label>
+            <label>Onset / duration<input name="onset" maxlength="500" /></label>
+            <label>Allergy status<select name="allergyStatus"><option value="NOT_CONFIRMED">Not confirmed</option><option value="CONFIRMED_NONE">Confirmed none</option><option value="HAS_ALLERGIES">Has allergies</option></select></label>
+            <label class="form-full">Symptoms<textarea name="symptoms" rows="2" maxlength="4000"></textarea></label>
+            <label class="form-full">Allergy details<input name="allergyDetails" maxlength="1000" /></label>
+            <label>Medication list reviewed<select name="medicationsReviewed"><option value="false">No</option><option value="true">Yes</option></select></label>
+            <label>Current medicines<input name="medicationNotes" maxlength="2000" /></label>
+            <label>Pain score (0–10)<input name="painScore" type="number" min="0" max="10" step="1" /></label>
+            <label>Blood pressure<input name="bloodPressure" maxlength="30" placeholder="120/80" /></label>
+            <label>Temperature °C<input name="temperatureC" type="number" min="25" max="45" step="0.1" /></label>
+            <label>Pulse bpm<input name="pulseBpm" type="number" min="20" max="250" step="1" /></label>
+            <label>SpO₂ %<input name="spo2Percent" type="number" min="0" max="100" step="0.1" /></label>
+            <label>CBG mg/dL<input name="cbgMgDl" type="number" min="0" max="1000" step="0.1" /></label>
+            <label>Weight kg<input name="weightKg" type="number" min="0" max="500" step="0.1" /></label>
+            <label>Height cm<input name="heightCm" type="number" min="0" max="300" step="0.1" /></label>
+            <label>BMI<input name="bmi" readonly aria-label="Calculated BMI" /></label>
+            <label class="form-full">Nurse handoff notes<textarea name="nurseNotes" rows="2" maxlength="2000"></textarea></label>
+          </div>
+          <div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-light" name="intent" value="DRAFT">Save draft</button><button type="submit" class="button button-primary" name="intent" value="SUBMITTED">Send to doctor</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="patientEncounterModal" role="dialog" aria-modal="true" aria-labelledby="patientEncounterTitle">
+      <div class="modal modal-wide">
+        <div class="modal-header"><div><p class="eyebrow">CLINICAL RECORD</p><h2 id="patientEncounterTitle">Add patient visit</h2><p class="muted" id="patientEncounterContext"></p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div>
+        <form id="patientEncounterForm">
+          <input type="hidden" name="patientId" /><input type="hidden" name="encounterId" /><input type="hidden" name="queueTokenId" />
+          <div class="form-grid">
+            <label>Visit type<select name="encounterType"><option value="OPD">OPD · Outpatient</option><option value="IPD">IPD · Inpatient</option></select></label>
+            <label>Visit date<input name="visitDate" type="date" required /></label>
+            <label>Doctor name<input name="doctorName" maxlength="160" required /></label>
+            <label>Diagnosis<input name="diagnosis" maxlength="1000" /></label>
+            <label class="form-full">Symptoms<input name="symptoms" maxlength="4000" /></label>
+            <label class="form-full">Consultation notes<textarea name="consultationNotes" rows="3" maxlength="10000"></textarea></label>
+            <label>Blood pressure<input name="bloodPressure" maxlength="30" /></label>
+            <label>Temperature °C<input name="temperatureC" type="number" min="25" max="45" step="0.1" /></label>
+            <label>Pulse bpm<input name="pulseBpm" type="number" min="20" max="250" step="1" /></label>
+            <label>SpO₂ %<input name="spo2Percent" type="number" min="0" max="100" step="0.1" /></label>
+            <label>CBG mg/dL<input name="cbgMgDl" type="number" min="0" max="1000" step="0.1" /></label>
+            <label>Weight kg<input name="weightKg" type="number" min="0" max="500" step="0.1" /></label>
+            <label>Height cm<input name="heightCm" type="number" min="0" max="300" step="0.1" /></label>
+            <label>Known case<input name="knownCase" maxlength="2000" /></label>
+            <label class="form-full">Prescriptions / treatment<textarea name="prescriptions" rows="2" maxlength="4000"></textarea></label>
+            <label>Tests / lab orders<input name="tests" maxlength="4000" /></label>
+            <label>Investigation advice<input name="investigationAdvice" maxlength="4000" /></label>
+            <label>Referral details<input name="referralDetails" maxlength="4000" /></label>
+            <label>Follow-up date<input name="followUpDate" type="date" /></label>
+            <label class="form-full">Follow-up instructions<textarea name="followUpInstructions" rows="2" maxlength="2000"></textarea></label>
+            <fieldset class="form-full" id="patientEncounterAdmissionFields"><legend>IPD admission details</legend><div class="form-grid"><label>Admitted at<input name="admittedAt" type="datetime-local" /></label><label>Ward<input name="ward" maxlength="100" /></label><label>Bed<input name="bed" maxlength="40" /></label></div></fieldset>
+          </div>
+          <div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Save doctor visit</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="consultationPrescriptionModal" role="dialog" aria-modal="true" aria-labelledby="consultationPrescriptionTitle">
+      <div class="modal modal-wide consultation-prescription-modal">
+        <div class="modal-header">
+          <div><p class="eyebrow">DOCTOR CONSULTATION</p><h2 id="consultationPrescriptionTitle">New consultation & prescription</h2><p class="muted" id="consultationPrescriptionSubtitle"></p></div>
+          <button class="modal-close" type="button" data-cancel-consultation aria-label="Cancel consultation">×</button>
+        </div>
+        <form id="consultationPrescriptionForm">
+          <input type="hidden" name="patientId" />
+          <input type="hidden" name="consultationId" />
+          <input type="hidden" name="encounterId" />
+          <section id="consultationPatientHeader" class="consultation-patient-header"></section>
+          <section id="consultationVitalsPanel" class="consultation-vitals-panel"></section>
+          <nav class="consultation-main-tabs" role="tablist" aria-label="Patient prescription or history">
+            <button type="button" class="active" role="tab" aria-selected="true" data-consultation-main-tab="prescription">Prescription</button>
+            <button type="button" role="tab" aria-selected="false" data-consultation-main-tab="history">History (<span id="consultationHistoryCount">0</span>)</button>
+          </nav>
+          <div id="consultationPrescriptionMainPanel" class="consultation-main-panel">
+          <nav class="consultation-workspace-tabs" role="tablist" aria-label="Consultation sections">
+            <button type="button" class="active" role="tab" aria-selected="true" data-consultation-tab="clinical">Clinical</button>
+            <button type="button" role="tab" aria-selected="false" data-consultation-tab="prescription">Prescription</button>
+            <button type="button" role="tab" aria-selected="false" data-consultation-tab="investigations">Investigations</button>
+            <button type="button" role="tab" aria-selected="false" data-consultation-tab="advice">Advice &amp; plan</button>
+            <button type="button" role="tab" aria-selected="false" data-consultation-tab="documents">Documents</button>
+          </nav>
+          <div class="consultation-workspace-panel" data-consultation-panel="clinical">
+          <section class="rx-form-section">
+            <div class="form-grid consultation-meta-fields">
+              <label>Consultation date<input name="visitDate" type="date" /></label>
+              <label>Doctor name<input name="doctorName" minlength="2" maxlength="160" /></label>
+            </div>
+            <section class="clinical-reference-section complaints-section">
+              <h3>COMPLAINTS <span>— tap to add, or type your own (comma-separated)</span></h3>
+              <input class="clinical-wide-input" name="complaints" maxlength="4000" placeholder="e.g. Fever, Headache" />
+            </section>
+            <section class="clinical-reference-section symptoms-section">
+              <h3>SYMPTOMS <span>— each with how long and how bad</span></h3>
+              <div class="clinical-symptom-row" data-clinical-symptoms>
+                <input name="symptomName" placeholder="Symptom" />
+                <input name="symptomDuration" placeholder="Duration — e.g. 3 days" />
+                <div class="clinical-select-wrap">
+                  <button type="button" class="clinical-select" data-clinical-menu="symptomSeverity">Mild</button>
+                  <div class="clinical-menu hidden" data-clinical-menu-panel="symptomSeverity">
+                    <button type="button" data-select-option="Mild" data-menu-target="symptomSeverity">Mild</button>
+                    <button type="button" data-select-option="Moderate" data-menu-target="symptomSeverity">Moderate</button>
+                    <button type="button" data-select-option="Severe" data-menu-target="symptomSeverity">Severe</button>
+                    <button type="button" data-select-option="Intermittent" data-menu-target="symptomSeverity">Intermittent</button>
+                  </div>
+                </div>
+                <button type="button" class="clinical-icon-button" data-clear-symptom aria-label="Clear symptom">×</button>
+              </div>
+              <div class="clinical-inline-actions"><button type="button" class="clinical-add-button" data-add-symptom>＋ Add symptom</button><span>Quick add:</span><button type="button" class="clinical-chip clinical-chip-added">＋ hgf</button></div>
+            </section>
+            <section class="clinical-reference-section history-section">
+              <h3>HISTORY</h3>
+              <label>PAST ILLNESS</label>
+              <div class="clinical-chip-list" data-history-chips="past">
+                <button type="button" class="clinical-chip" data-history-chip>Diabetes</button><button type="button" class="clinical-chip" data-history-chip>Hypertension</button><button type="button" class="clinical-chip" data-history-chip>Thyroid</button><button type="button" class="clinical-chip" data-history-chip>Asthma</button><button type="button" class="clinical-chip" data-history-chip>TB</button><button type="button" class="clinical-chip" data-history-chip>Heart disease</button><button type="button" class="clinical-chip" data-history-chip>Kidney disease</button><button type="button" class="clinical-chip" data-history-chip>Epilepsy</button>
+              </div>
+              <label>HABITS</label>
+              <div class="clinical-chip-list" data-history-chips="habits">
+                <button type="button" class="clinical-chip" data-history-chip>Smoking</button><button type="button" class="clinical-chip" data-history-chip>Alcohol</button><button type="button" class="clinical-chip" data-history-chip>Tobacco / gutkha</button><button type="button" class="clinical-chip" data-history-chip>Sedentary</button><button type="button" class="clinical-chip" data-history-chip>Vegetarian</button>
+              </div>
+              <label class="clinical-red-label">KNOWN ALLERGIES</label>
+              <button type="button" class="clinical-add-button allergy-button" data-add-allergy>＋ Add allergy</button>
+              <div class="clinical-two-column">
+                <label>FAMILY HISTORY<textarea name="familyHistory" maxlength="4000" placeholder="e.g. Father — diabetes; mother — hypertension"></textarea></label>
+                <label>SURGICAL / OBSTETRIC<textarea name="surgicalHistory" maxlength="4000" placeholder="e.g. Appendectomy 2019; C2P1"></textarea></label>
+                <label>CURRENT MEDICATION (outside / self)<textarea name="currentMedication" maxlength="4000" placeholder="What they are already taking"></textarea></label>
+              </div>
+              <label>OTHER NOTES<textarea name="otherNotes" maxlength="8000" placeholder="Anything else worth recording"></textarea></label>
+            </section>
+            <section class="clinical-reference-section examination-section">
+              <h3>ON EXAMINATION</h3>
+              <textarea name="clinicalObservations" maxlength="8000" placeholder="General & systemic findings..."></textarea>
+            </section>
+            <section class="clinical-reference-section diagnosis-section">
+              <h3>DIAGNOSIS <span>— with ICD-10 and status</span></h3>
+              <div class="clinical-diagnosis-row">
+                <input name="diagnosisName" maxlength="4000" placeholder="e.g. Essential hypertension" />
+                <input name="diagnosisIcd" maxlength="20" value="ICD-10" aria-label="ICD-10 code" />
+                <div class="clinical-select-wrap">
+                  <button type="button" class="clinical-select" data-clinical-menu="diagnosisStatus">Provisional</button>
+                  <div class="clinical-menu hidden" data-clinical-menu-panel="diagnosisStatus">
+                    <button type="button" data-select-option="Provisional" data-menu-target="diagnosisStatus">Provisional</button><button type="button" data-select-option="Final" data-menu-target="diagnosisStatus">Final</button><button type="button" data-select-option="Differential" data-menu-target="diagnosisStatus">Differential</button><button type="button" data-select-option="Comorbidity" data-menu-target="diagnosisStatus">Comorbidity</button>
+                  </div>
+                </div>
+                <button type="button" class="clinical-icon-button" data-clear-diagnosis aria-label="Clear diagnosis">×</button>
+              </div>
+              <button type="button" class="clinical-add-button" data-add-diagnosis>＋ Add diagnosis</button>
+            </section>
+          </section>
+          </div>
+          <div class="consultation-workspace-panel hidden" data-consultation-panel="prescription">
+          <section class="rx-form-section">
+            <div class="rx-section-heading"><div><h3>Medication</h3><label class="rx-language-select">Prescription language<select id="prescriptionOutputLanguage"><option value="both">English + Tamil</option><option value="english">English</option><option value="tamil">Tamil</option></select></label><small class="rx-language-note">Standard labels are translated; doctor-entered text stays as entered.</small></div><button class="button button-light button-small" type="button" data-rx-custom="tablets"><span aria-hidden="true">＋</span> Add medicine</button></div>
+            <datalist id="rxFrequencyOptions"><option value="1-0-0" label="Morning only"></option><option value="0-1-0" label="Afternoon only"></option><option value="0-0-1" label="Night only"></option><option value="1-0-1" label="Morning + Night"></option><option value="1-1-0" label="Morning + Afternoon"></option><option value="0-1-1" label="Afternoon + Night"></option><option value="1-1-1" label="Morning + Afternoon + Night"></option><option value="1-1-1-1" label="Morning + Afternoon + Evening + Night"></option><option value="1-0-0-1" label="Morning + Night (four-slot schedule)"></option><option value="0-0-0-1" label="Night only (four-slot schedule)"></option></datalist>
+            <datalist id="rxCustomFrequencyOptions"><option value="Once daily"></option><option value="Twice daily"></option><option value="Three times daily"></option><option value="Four times daily"></option></datalist>
+            <datalist id="rxInstructionOptions"><option value="Before food"></option><option value="After food"></option><option value="With food"></option><option value="Any time"></option></datalist>
+            <details class="rx-catalog-search">
+              <summary>Search clinic medicine database</summary>
+              <div class="rx-medicine-search"><input type="search" data-rx-search="tablets" placeholder="Search clinic medicine database" aria-label="Search tablet medicines" /><button class="button button-light button-small" type="button" data-rx-search-button="tablets">Search</button></div>
+              <div class="rx-medicine-results" data-rx-results="tablets"></div>
+            </details>
+            <div class="rx-medication-rows" data-rx-rows="tablets"></div>
+          </section>
+
+          <section class="rx-form-section">
+            <div class="rx-section-heading"><h3>Advice &amp; follow-up</h3></div>
+            <div class="rx-prescription-advice-grid">
+              <label>Advice<textarea name="advice" rows="3" maxlength="2000" placeholder="Add care instructions for the patient"></textarea></label>
+              <label>Dietary advice<textarea name="dietaryAdvice" rows="3" maxlength="2000" placeholder="Add diet or hydration guidance"></textarea></label>
+              <div class="rx-follow-up-fields">
+                <label>Next follow-up<input name="nextVisitDate" type="date" /></label>
+                <label>Visit type<select name="followUpType"><option selected>In clinic</option><option>Telehealth</option><option>Phone call</option><option>Other</option></select></label>
+                <label class="rx-follow-up-instructions">Follow-up instructions<input name="followUpInstructions" maxlength="1980" placeholder="Bring reports, return if symptoms worsen..." /></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="rx-form-section">
+            <div class="rx-section-heading">
+              <div><h3>Injections &amp; procedures</h3><p class="rx-section-caption">Clinic administration order · not dispensed</p></div>
+              <button class="button button-light button-small" type="button" data-rx-custom="injections">＋ Add injection / procedure</button>
+            </div>
+            <details class="rx-catalog-search">
+              <summary>Search clinic medicine database</summary>
+              <div class="rx-medicine-search"><input type="search" data-rx-search="injections" placeholder="Search clinic medicine database" aria-label="Search injection medicines" /><button class="button button-light button-small" type="button" data-rx-search-button="injections">Search</button><button class="button button-light button-small" type="button" data-rx-custom="injections">＋ Custom medicine</button></div>
+              <div class="rx-preset-list" aria-label="Common injection medicines"><button type="button" data-rx-preset="injections" data-name="Paracetamol">Paracetamol</button><button type="button" data-rx-preset="injections" data-name="CPM">CPM</button><button type="button" data-rx-preset="injections" data-name="Ondansetron">Ondansetron</button><button type="button" data-rx-preset="injections" data-name="Diclofenac">Diclofenac</button><button type="button" data-rx-preset="injections" data-name="Dicyclomine">Dicyclomine</button><button type="button" data-rx-preset="injections" data-name="Dexamethasone">Dexamethasone</button></div>
+              <div class="rx-medicine-results" data-rx-results="injections"></div>
+            </details>
+            <div class="rx-medication-rows" data-rx-rows="injections"></div>
+          </section>
+
+          <details class="rx-additional-orders">
+            <summary>Additional orders · nebulization and IV fluids</summary>
+            <section class="rx-form-section">
+              <div class="rx-section-heading"><h3>Nebulization</h3><button class="button button-light button-small" type="button" data-rx-custom="nebulizations">＋ Add nebulization</button></div>
+              <div class="rx-medicine-search"><input type="search" data-rx-search="nebulizations" placeholder="Search clinic medicine database" aria-label="Search nebulization medicines" /><button class="button button-light button-small" type="button" data-rx-search-button="nebulizations">Search</button></div>
+              <div class="rx-preset-list" aria-label="Common nebulization medicines"><button type="button" data-rx-preset="nebulizations" data-name="Duolin">Duolin</button><button type="button" data-rx-preset="nebulizations" data-name="Budecort">Budecort</button></div>
+              <div class="rx-medicine-results" data-rx-results="nebulizations"></div>
+              <div class="rx-medication-rows" data-rx-rows="nebulizations"></div>
+            </section>
+            <section class="rx-form-section">
+              <div class="rx-section-heading"><h3>IV fluids</h3><button class="button button-light button-small" type="button" id="addIvFluid">＋ Add fluid</button></div>
+              <div class="rx-structured-rows" id="ivFluidRows"></div>
+            </section>
+          </details>
+          </div>
+          <div class="consultation-workspace-panel hidden" data-consultation-panel="investigations">
+          <section class="rx-form-section">
+            <div class="rx-section-heading"><h3>Investigation advised</h3><button class="button button-light button-small" type="button" id="addInvestigation">＋ Add investigation</button></div>
+            <div class="rx-structured-rows" id="investigationRows"></div>
+          </section>
+          </div>
+          <div class="consultation-workspace-panel hidden" data-consultation-panel="advice">
+          <section class="rx-form-section">
+            <h3>Referral</h3>
+            <div class="form-grid">
+              <label>Hospital name<input name="referralHospitalName" maxlength="160" /></label>
+              <label>Doctor name<input name="referralDoctorName" maxlength="160" /></label>
+              <label class="form-full">Referral reason<textarea name="referralReason" rows="2" maxlength="1000"></textarea></label>
+              <label class="form-full">Referral notes<textarea name="referralNotes" rows="2" maxlength="2000"></textarea></label>
+            </div>
+          </section>
+          </div>
+          <div class="consultation-workspace-panel hidden" data-consultation-panel="documents">
+            <section class="rx-form-section">
+              <div class="rx-section-heading"><div><h3>Documents / reports</h3><p class="muted">Attach lab reports, scans or referral letters to this visit.</p></div></div>
+              <input id="consultationDocumentFiles" class="consultation-document-input" type="file" multiple accept="application/pdf,image/png,image/jpeg,image/webp,image/gif,text/plain,.pdf,.png,.jpg,.jpeg,.webp,.gif,.txt" />
+              <div class="consultation-document-actions">
+                <details class="consultation-document-menu">
+                  <summary class="button button-light">＋ Add documents <span aria-hidden="true">▾</span></summary>
+                  <div class="consultation-document-menu-options">
+                    <button type="button" data-consultation-document-source="camera">Take a photo</button>
+                    <button type="button" data-consultation-document-source="files">Upload files</button>
+                  </div>
+                </details>
+                <small>Take photos or add files repeatedly. Saved items are grouped by upload date.</small>
+              </div>
+              <div id="consultationDocumentSummary"><p class="muted">No reports or documents are recorded for this patient.</p></div>
+            </section>
+          </div>
+
+          <p class="rx-safety-note">Prescription saved for the patient and consultation only. Saving does not record administration or dispensing.</p>
+          </div>
+          <section id="consultationHistoryMainPanel" class="consultation-history-panel hidden" aria-label="Previous patient visits">
+            <div id="consultationHistoryContent"></div>
+          </section>
+          <div class="consultation-draft-banner"><b>Unsaved draft found</b><span>from 23/11/2026, 23:05:38 — this consultation was not saved.</span><button type="button" class="clinical-draft-restore">Restore It</button><button type="button" class="clinical-draft-discard">Discard</button></div>
+          <div class="form-actions consultation-form-footer"><button type="button" class="button button-light" data-cancel-consultation>Cancel</button><button class="button button-primary" type="submit" name="prescriptionAction" value="save">Save prescription</button><button class="button button-secondary" type="submit" name="prescriptionAction" value="save-and-print">Save &amp; print prescription</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="consultationCameraModal" role="dialog" aria-modal="true" aria-labelledby="consultationCameraTitle">
+      <div class="modal consultation-camera-modal">
+        <div class="modal-header">
+          <div><p class="eyebrow">PATIENT DOCUMENTS</p><h2 id="consultationCameraTitle">Take a photo</h2><p class="patient-modal-description">Position the document in the camera, then capture it.</p></div>
+          <button class="modal-close" type="button" data-close-modal aria-label="Close camera">×</button>
+        </div>
+        <div class="consultation-camera-stage">
+          <video id="consultationCameraPreview" autoplay playsinline muted aria-label="Live camera preview"></video>
+        </div>
+        <p id="consultationCameraError" class="consultation-camera-error hidden" role="alert"></p>
+        <div class="form-actions consultation-camera-actions">
+          <button type="button" class="button button-light" data-close-modal>Cancel</button>
+          <button type="button" class="button button-primary" id="consultationCameraCapture" disabled>Capture photo</button>
         </div>
       </div>
     </div>
@@ -396,13 +1045,17 @@
 
     <div class="modal-backdrop hidden" id="inventoryHistoryModal" role="dialog" aria-modal="true" aria-labelledby="inventoryHistoryTitle"><div class="modal modal-wide"><div class="modal-header"><div><p class="eyebrow">INVENTORY AUDIT TRAIL</p><h2 id="inventoryHistoryTitle">Stock movement history</h2></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><div class="table-scroll"><table><thead><tr><th>Date</th><th>Movement</th><th>Change</th><th>Balance</th><th>Recorded by</th><th>Details</th></tr></thead><tbody id="inventoryHistoryTable"></tbody></table></div><div class="empty-state hidden" id="inventoryHistoryEmpty"><b>No stock movements recorded</b><p>Opening stock and future changes will appear here.</p></div></div></div>
 
+    <div class="modal-backdrop hidden" id="clinicServiceModal" role="dialog" aria-modal="true" aria-labelledby="clinicServiceModalTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">CLINIC SERVICE MASTER</p><h2 id="clinicServiceModalTitle">Add clinic service</h2></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div><form id="clinicServiceForm" class="form-grid"><input type="hidden" name="id" /><label>Service code <span>*</span><input name="code" required maxlength="40" pattern="[A-Za-z0-9][A-Za-z0-9_-]{1,39}" /></label><label>Service name <span>*</span><input name="name" required maxlength="120" /></label><label>Price (₹) <span>*</span><input name="price" type="number" min="0" max="9999999999.99" step="0.01" required /></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Save service</button></div></form></div></div>
+    <div class="modal-backdrop hidden" id="prescriptionDetailsModal" role="dialog" aria-modal="true" aria-labelledby="prescriptionDetailsTitle"><div class="modal modal-wide"><div class="modal-header"><div><p class="eyebrow">PRESCRIPTION DETAILS</p><h2 id="prescriptionDetailsTitle">Prescription</h2><p class="muted" id="prescriptionDetailsSubtitle"></p></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><div id="prescriptionDetailsContent"></div></div></div>
+    <div class="modal-backdrop hidden" id="medicationAdministrationModal" role="dialog" aria-modal="true" aria-labelledby="medicationAdministrationTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">NURSING MEDICATION RECORD</p><h2 id="medicationAdministrationTitle">Record medication outcome</h2><p class="muted" id="medicationAdministrationContext"></p></div><button class="modal-close" type="button" data-close-modal aria-label="Close">×</button></div><form id="medicationAdministrationForm" class="form-grid"><input type="hidden" name="orderId" /><input type="hidden" name="medicationId" /><input type="hidden" name="patientId" /><input type="hidden" name="queueTokenId" /><label class="form-full">Outcome <span>*</span><select name="status" required><option value="ADMINISTERED">Administered</option><option value="PARTIALLY_ADMINISTERED">Partially administered</option><option value="HELD">Held</option><option value="MISSED">Not given</option><option value="REFUSED">Patient refused</option></select></label><label class="form-full" id="medicationAdministrationQuantityField">Quantity given <span>*</span><input name="quantity" type="number" min="1" step="1" value="1" required /><small class="field-help">Record the actual quantity administered. Linked stock is deducted once when saved.</small></label><label class="form-full hidden" id="medicationAdministrationReasonField">Reason <span>*</span><textarea name="reason" rows="2" maxlength="500" placeholder="Why was the medication held or not given?"></textarea></label><label class="form-full">Notes<textarea name="notes" rows="2" maxlength="1000" placeholder="Optional administration note"></textarea></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button type="submit" class="button button-primary">Save nursing record</button></div></form></div></div>
     <div class="modal-backdrop hidden" id="invoiceModal" role="dialog" aria-modal="true" aria-labelledby="invoiceModalTitle"><div class="modal modal-wide"><div class="modal-header"><div><p class="eyebrow">PATIENT BILLING</p><h2 id="invoiceModalTitle">Create invoice</h2></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><form id="invoiceForm"><input type="hidden" name="encounterId" /><div class="form-grid"><label class="form-full">Patient <span>*</span><select name="patientId" required></select></label><p class="muted form-full hidden" id="prescriptionInvoiceNotice">This invoice is linked to the selected patient's prescription and cannot be changed.</p><label>Invoice date<input name="date" type="date" required /></label><label>Print template<select name="template"><option value="professional">Professional invoice</option><option value="detailed">Detailed clinic bill</option><option value="thermal">Compact receipt</option></select></label><label>Discount (₹)<input name="discount" type="number" min="0" step="0.01" value="0" /></label><label>Applicable tax / GST (%)<input name="taxRate" type="number" min="0" max="100" step="0.01" value="0" /></label><label>Payment received (₹)<input name="paid" type="number" min="0" step="0.01" value="0" /></label><label>Payment method<select name="paymentMethod"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank transfer</option><option>Insurance</option><option>Other</option></select></label></div><div class="invoice-items-heading"><div><h3>Invoice items</h3><p>Add consultation charges, medicines or other services.</p></div><button type="button" class="button button-light button-small" id="addInvoiceItem">＋ Add item</button></div><div class="invoice-lines" id="invoiceLines"></div><div class="invoice-bottom"><div class="invoice-note"><label>Notes<input name="notes" maxlength="250" placeholder="Optional note for this invoice" /></label></div><div class="totals"><div><span>Subtotal</span><b id="invoiceSubtotal">₹0</b></div><div><span>Discount</span><b id="invoiceDiscount">− ₹0</b></div><div><span>Tax / GST</span><b id="invoiceTax">₹0</b></div><div class="total-row"><span>Total</span><b id="invoiceTotal">₹0</b></div><div><span>Balance due</span><b id="invoiceDue">₹0</b></div></div></div><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save & print invoice</button></div></form></div></div>
 
     <div class="modal-backdrop hidden" id="paymentModal" role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">PAYMENT ENTRY</p><h2 id="paymentModalTitle">Receive payment</h2></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><form id="paymentForm" class="form-grid"><input type="hidden" name="invoiceId" /><label>Amount received (₹) <span>*</span><input name="amount" type="number" min="0.01" step="0.01" required /></label><label>Payment date <span>*</span><input name="date" type="date" required /></label><label>Payment method<select name="method"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank transfer</option><option>Insurance</option><option>Other</option></select></label><label>Transaction / reference number<input name="reference" maxlength="80" /></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Record & print receipt</button></div></form></div></div>
 
+    <div class="modal-backdrop hidden" id="invoiceVoidModal" role="dialog" aria-modal="true" aria-labelledby="invoiceVoidTitle"><div class="modal"><div class="modal-header"><div><p class="eyebrow">INVOICE CORRECTION</p><h2 id="invoiceVoidTitle">Void unpaid invoice</h2></div><button class="modal-close" data-close-modal aria-label="Close">×</button></div><form id="invoiceVoidForm" class="form-grid"><input type="hidden" name="invoiceId" /><p class="form-full field-help">Voiding preserves the invoice and its audit history. Recorded payments are not refundable through this action, and inventory movements are not reversed.</p><label class="form-full">Reason <span>*</span><textarea name="reason" rows="3" minlength="3" maxlength="500" required placeholder="Explain why this unpaid invoice is being voided"></textarea></label><div class="form-actions"><button type="button" class="button button-light" data-close-modal>Keep invoice</button><button type="submit" class="button button-primary">Void invoice</button></div></form></div></div>
     <div class="toast hidden" id="toast" role="status"></div>
     <div id="printRoot" class="print-root"></div>
-    <script src="api-config.js?v=20261121-public-demo"></script>
-    <script src="clinic.js?v=20261121-public-demo"></script>
+    <script src="api-config.js?v=20261125-two-workstations-v1"></script>
+    <script src="clinic.js?v=20261127-front-office-vitals-validation-v1"></script>
   </body>
 </html>
