@@ -49,6 +49,7 @@
           <a class="nav-link active" href="#overview" data-section="overview" title="Overview"><span>▦</span> Overview</a>
           <a class="nav-link" href="#patients" data-section="patients" title="Patients"><span>♙</span> Patients <b class="nav-count" id="navPatientCount">0</b></a>
           <a class="nav-link hidden" href="#doctor" data-section="doctor" id="doctorWorkspaceNav" title="Doctor workspace"><span>⚕</span> Doctor workspace</a>
+          <a class="nav-link hidden" href="#doctor-dashboard" data-section="doctor-dashboard" id="doctorDashboardNav" title="Doctor dashboard"><span>▥</span> Doctor dashboard</a>
           <div class="doctor-search-navigation hidden" id="doctorSearchNav" aria-label="Clinical search engines">
             <p class="doctor-search-caption">SEARCH ENGINE</p>
             <button type="button" class="doctor-search-option" id="doctorSearchGoogle" data-doctor-search-provider="google" title="Google search"><span class="provider-google" aria-hidden="true">G</span> Google</button>
@@ -184,6 +185,23 @@
 
           <section class="view" id="doctor">
             <div class="page-heading"><div><p class="eyebrow">DOCTOR WORKSPACE</p><h1>OPD queue · Today</h1><p class="muted">Checked-in patients appear here automatically. Select a patient to review their record and begin consultation.</p></div><div class="doctor-heading-actions"><div class="doctor-api-controls"><span id="doctorApiConnectionLabel" aria-live="polite">Demo mode</span><button class="button button-primary button-small" type="button" id="doctorApiConnectButton">Connect to clinic API</button><button class="button button-light button-small hidden" type="button" id="doctorApiDisconnectButton">Disconnect</button></div><span class="doctor-realtime-status" id="doctorRealtimeStatus" aria-live="polite">Automatic queue sync</span><button class="button button-light" type="button" id="refreshDoctorQueue">Refresh queue</button></div></div>
+            <div class="doctor-realtime-notifications" id="doctorRealtimeNotifications" aria-live="polite" aria-atomic="false"></div>
+            <div class="doctor-workspace-layout">
+              <aside class="doctor-queue-panel">
+                <div class="doctor-queue-heading"><div><h2>My queue · Today</h2><p id="doctorQueueCounts">0 waiting · 0 in progress · 0 done</p></div><span class="doctor-queue-count" id="doctorQueueCount">0</span></div>
+                <label class="doctor-queue-search"><span>⌕</span><input id="doctorQueueSearch" type="search" placeholder="Search patient or token" aria-label="Search doctor queue" /></label>
+                <div id="doctorWorkspaceQueue" class="doctor-queue-list"></div>
+                <div class="empty-state hidden" id="doctorQueueEmpty"><b>No patients in the queue</b><p>New checked-in patients will appear here.</p></div>
+              </aside>
+              <main class="doctor-workspace-main" id="doctorWorkspaceMain">
+                <div class="doctor-workspace-placeholder" id="doctorWorkspacePlaceholder"><span>⚕</span><h2>Select a patient to begin</h2><p>New arrivals from Appointments will appear in this queue automatically.</p></div>
+                <div id="doctorWorkspacePatient" class="hidden"></div>
+              </main>
+            </div>
+          </section>
+
+          <section class="view" id="doctor-dashboard">
+            <div class="page-heading"><div><p class="eyebrow">DOCTOR WORKSPACE</p><h1>Doctor Dashboard</h1><p class="muted">Live patient assignments and consultation analytics.</p></div><div class="doctor-heading-actions"><span class="doctor-realtime-status" id="doctorDashboardRealtimeStatus">Automatic queue sync</span><button class="button button-light" type="button" id="refreshDoctorDashboard">Refresh dashboard</button></div></div>
             <section class="doctor-dashboard" id="doctorDashboard" aria-label="Doctor dashboard">
               <div class="doctor-dashboard-heading"><div><p class="eyebrow">LIVE OVERVIEW</p><h2>Today at a glance</h2><p id="doctorDashboardUpdated">Loading clinic statistics…</p></div><span class="doctor-dashboard-scope" id="doctorDashboardScope">Your queue</span></div>
               <div class="doctor-kpi-grid">
@@ -222,19 +240,6 @@
                 </article>
               </div>
             </section>
-            <div class="doctor-realtime-notifications" id="doctorRealtimeNotifications" aria-live="polite" aria-atomic="false"></div>
-            <div class="doctor-workspace-layout">
-              <aside class="doctor-queue-panel">
-                <div class="doctor-queue-heading"><div><h2>My queue · Today</h2><p id="doctorQueueCounts">0 waiting · 0 in progress · 0 done</p></div><span class="doctor-queue-count" id="doctorQueueCount">0</span></div>
-                <label class="doctor-queue-search"><span>⌕</span><input id="doctorQueueSearch" type="search" placeholder="Search patient or token" aria-label="Search doctor queue" /></label>
-                <div id="doctorWorkspaceQueue" class="doctor-queue-list"></div>
-                <div class="empty-state hidden" id="doctorQueueEmpty"><b>No patients in the queue</b><p>New checked-in patients will appear here.</p></div>
-              </aside>
-              <main class="doctor-workspace-main" id="doctorWorkspaceMain">
-                <div class="doctor-workspace-placeholder" id="doctorWorkspacePlaceholder"><span>⚕</span><h2>Select a patient to begin</h2><p>New arrivals from Appointments will appear in this queue automatically.</p></div>
-                <div id="doctorWorkspacePatient" class="hidden"></div>
-              </main>
-            </div>
           </section>
 
           <section class="view" id="nurse">

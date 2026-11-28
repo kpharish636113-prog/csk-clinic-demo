@@ -904,10 +904,13 @@ test('doctor workspace receives check-ins and saves consultation history', async
   await page.getByRole('link', { name: 'Doctor workspace' }).click();
   await expect(page.locator('#doctorWorkspaceQueue')).toContainText('Rohan Mehta');
   await expect(page.locator('#doctorQueueCounts')).toContainText('1 waiting');
+  await expect(page.locator('#doctorDashboard')).toBeHidden();
+  await page.locator('#doctorDashboardNav').click();
   await expect(page.locator('#doctorDashboard')).toBeVisible();
   await expect(page.locator('#doctorKpiAssigned')).not.toHaveText('—');
   await expect(page.locator('#doctorHourlyArrivals')).toBeVisible();
   await expect(page.locator('#doctorStatusDistribution')).toBeVisible();
+  await page.locator('#doctorWorkspaceNav').click();
   await expect(page.locator('#doctor .doctor-workspace-layout')).toHaveCSS('display', 'grid');
   await expect(page.locator('#doctor .doctor-queue-item')).toHaveCSS('border-radius', '10px');
   await expect(page.locator('#doctor .doctor-queue-item.active')).toContainText('Rohan Mehta');

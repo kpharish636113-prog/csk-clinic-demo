@@ -1327,6 +1327,7 @@
   function setDoctorRealtimeStatus(status) {
     doctorRealtimeConnected = status === 'connected';
     const label = document.getElementById('doctorRealtimeStatus');
+    const dashboardLabel = document.getElementById('doctorDashboardRealtimeStatus');
     if (label) {
       label.textContent = doctorRealtimeConnected
         ? 'Live updates'
@@ -1335,6 +1336,15 @@
           : status === 'disconnected'
             ? 'Reconnecting · Auto-refresh enabled'
             : 'Connecting to live updates…';
+    }
+    if (dashboardLabel) {
+      dashboardLabel.textContent = doctorRealtimeConnected
+        ? 'Live updates'
+        : status === 'unavailable'
+            ? 'Auto-refresh · Realtime not configured'
+            : status === 'disconnected'
+              ? 'Reconnecting · Auto-refresh enabled'
+              : 'Connecting to live updates…';
     }
     if (doctorRealtimeConnected) {
       if (doctorQueuePollingTimer !== null) window.clearInterval(doctorQueuePollingTimer);
@@ -1590,7 +1600,7 @@
     const maxHourly = Math.max(1, ...hourly.map((item) => Number(item.count || 0)));
     document.getElementById('doctorHourlyArrivals').innerHTML = doctorDashboardBarMarkup(
       hourly,
-      (item) => String(item.hour).padStart(2, '0'),
+      (item) => `${String(item.hour).padStart(2, '0')}:00`,
       (item) => item.count,
       maxHourly,
     );
@@ -1619,7 +1629,6 @@
     trends.forEach(([elementId, stats, labelFor]) => {
       const target = document.getElementById(elementId);
       const items = Array.isArray(stats) ? stats : [];
-      if (target) target.style.setProperty('--doctor-trend-count', String(items.length || 1));
       if (target) target.innerHTML = doctorDashboardTrendMarkup(items, labelFor);
     });
 
@@ -2012,12 +2021,12 @@
       showView('patients');
       return;
     }
-    if (WORKSPACE_MODE === 'doctor' && !['doctor', 'pharmacy', 'prescriptions'].includes(id)) {
+    if (WORKSPACE_MODE === 'doctor' && !['doctor', 'doctor-dashboard', 'pharmacy', 'prescriptions'].includes(id)) {
       showToast('This page is limited to the Doctor Workspace.');
       showView('doctor');
       return;
     }
-    if (id === 'doctor' && !canAccessDoctorWorkspace()) {
+    if (['doctor', 'doctor-dashboard'].includes(id) && !canAccessDoctorWorkspace()) {
       showToast('Your account does not have permission to access the doctor workspace.');
       if (WORKSPACE_MODE === 'doctor') setWorkspaceAccessDenied(true);
       return;
@@ -2032,13 +2041,20 @@
     document.querySelectorAll('.view').forEach((view) => view.classList.toggle('active', view === target));
     document.querySelectorAll('.nav-link[data-section]').forEach((link) => link.classList.toggle('active', link.dataset.section === id));
     document.getElementById('pageBreadcrumb').textContent = id === 'doctor' ? 'Doctor Workspace'
+      : id === 'doctor-dashboard' ? 'Doctor Dashboard'
       : WORKSPACE_MODE === 'doctor' && id === 'pharmacy' ? 'Medicines' : id[0].toUpperCase() + id.slice(1);
-    document.getElementById('activeWorkspaceName').textContent = WORKSPACE_MODE === 'doctor' || id === 'doctor' ? 'Doctor Workspace' : 'Front Office';
+    document.getElementById('activeWorkspaceName').textContent =
+      WORKSPACE_MODE === 'doctor' || ['doctor', 'doctor-dashboard'].includes(id)
+        ? 'Doctor Workspace'
+        : 'Front Office';
     document.getElementById('sidebar').classList.remove('open');
     history.replaceState(null, '', `#${id}`);
     if (id === 'doctor') {
       renderDoctorWorkspace();
       void refreshDoctorWorkspaceFromApi();
+      void refreshDoctorDashboard();
+    }
+    if (id === 'doctor-dashboard') {
       void refreshDoctorDashboard();
     }
     if (id === 'prescriptions') loadPrescriptionWorkspace();
@@ -9142,16 +9158,20 @@
     const hasDoctorAccess = canAccessDoctorWorkspace();
     document.getElementById('doctorWorkspaceOption')?.classList.toggle('hidden', !hasDoctorAccess);
     document.getElementById('doctorMedicinesOption')?.classList.toggle('hidden', !hasDoctorAccess);
+    document.getElementById('doctorWorkspaceNav')?.classList.toggle('hidden', !hasDoctorAccess);
+    document.getElementById('doctorDashboardNav')?.classList.toggle('hidden', !hasDoctorAccess);
     if (WORKSPACE_MODE === 'doctor') {
       setWorkspaceAccessDenied(!hasDoctorAccess);
       if (hasDoctorAccess) {
         renderDoctorWorkspace();
         renderMedicines();
+        void refreshDoctorDashboard();
       }
       return;
     }
     if (WORKSPACE_MODE === 'front-office') {
       document.getElementById('doctorWorkspaceNav')?.classList.add('hidden');
+      document.getElementById('doctorDashboardNav')?.classList.add('hidden');
     }
     toggleAppointmentApiFields();
     renderOverview();
@@ -9877,6 +9897,10 @@
         await refreshDoctorDashboard();
       }
       else renderDoctorWorkspace();
+      return;
+    }
+    if (target.id === 'refreshDoctorDashboard') {
+      await refreshDoctorDashboard();
       return;
     }
     if (target.id === 'blankRegistrationForm' || target.id === 'blankConsentForm') {
