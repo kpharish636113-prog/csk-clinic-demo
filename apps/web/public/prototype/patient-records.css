@@ -3409,14 +3409,6 @@
   .doctor-realtime-notifications { top: 12px; right: 12px; }
 }
 
-#doctor-dashboard .page-heading h1,
-#doctor-dashboard .page-heading p,
-#doctor-dashboard .doctor-realtime-status,
-#doctor-dashboard .doctor-dashboard,
-#doctor-dashboard .doctor-dashboard *:not(button):not(svg):not(path) {
-  color: #172b45;
-}
-
 body.workspace-front-office #doctorWorkspaceNav,
 body.workspace-front-office #doctor {
   display: none !important;
@@ -3571,6 +3563,22 @@ section.workspace-access-denied .button {
   border-color: #b7dfd9;
   background: #edf8f6;
   color: #087c78;
+}
+
+@media screen {
+  body .app .main,
+  body .app .main *,
+  body .modal-backdrop,
+  body .modal-backdrop *,
+  body > .toast {
+    color: #000 !important;
+  }
+
+  body .app .main *::placeholder,
+  body .modal-backdrop *::placeholder {
+    color: #000 !important;
+    opacity: 1;
+  }
 }
 
 @media (min-width: 821px) {
