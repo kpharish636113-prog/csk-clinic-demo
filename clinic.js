@@ -1590,7 +1590,7 @@
     const maxHourly = Math.max(1, ...hourly.map((item) => Number(item.count || 0)));
     document.getElementById('doctorHourlyArrivals').innerHTML = doctorDashboardBarMarkup(
       hourly,
-      (item) => `${String(item.hour).padStart(2, '0')}:00`,
+      (item) => String(item.hour).padStart(2, '0'),
       (item) => item.count,
       maxHourly,
     );
@@ -1619,6 +1619,7 @@
     trends.forEach(([elementId, stats, labelFor]) => {
       const target = document.getElementById(elementId);
       const items = Array.isArray(stats) ? stats : [];
+      if (target) target.style.setProperty('--doctor-trend-count', String(items.length || 1));
       if (target) target.innerHTML = doctorDashboardTrendMarkup(items, labelFor);
     });
 
