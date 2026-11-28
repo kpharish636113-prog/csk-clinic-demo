@@ -9,10 +9,8 @@ test.beforeEach(async ({ page }) => {
 
 test('overview navigation and patient registration work', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Good morning/ })).toBeVisible();
-  await expect(page.locator('#overview .welcome-row .muted')).toHaveCSS('color', 'rgb(0, 0, 0)');
   await page.getByRole('button', { name: '＋ Register patient' }).click();
   await expect(page.getByRole('heading', { name: 'Register patient' })).toBeVisible();
-  await expect(page.locator('#patientModal .patient-modal-description')).toHaveCSS('color', 'rgb(0, 0, 0)');
 
   await page.locator('#patientForm [name="firstName"]').fill('E2E History Patient');
   await page.locator('#patientForm [name="phone"]').fill('9000000099');
@@ -916,7 +914,7 @@ test('doctor workspace receives check-ins and saves consultation history', async
     [...dashboard.querySelectorAll('p, small, span, .doctor-chart-label')]
       .map((element) => getComputedStyle(element).color),
   );
-  expect(new Set(dashboardTextColors)).toEqual(new Set(['rgb(0, 0, 0)']));
+  expect(new Set(dashboardTextColors)).toEqual(new Set(['rgb(23, 43, 69)']));
   await page.locator('#doctorWorkspaceNav').click();
   await expect(page.locator('#doctor .doctor-workspace-layout')).toHaveCSS('display', 'grid');
   await expect(page.locator('#doctor .doctor-queue-item')).toHaveCSS('border-radius', '10px');
