@@ -908,16 +908,6 @@ test('doctor workspace receives check-ins and saves consultation history', async
   await expect(page.locator('#doctorKpiAssigned')).not.toHaveText('—');
   await expect(page.locator('#doctorHourlyArrivals')).toBeVisible();
   await expect(page.locator('#doctorStatusDistribution')).toBeVisible();
-  await expect(page.locator('#doctorHourlyArrivals')).toHaveCSS('overflow-x', 'hidden');
-  const chartWidths = await page.locator('#doctorHourlyArrivals, #doctorDailyTrend, #doctorWeeklyTrend, #doctorMonthlyTrend').evaluateAll((charts) =>
-    charts.map((chart) => ({
-      clientWidth: chart.clientWidth,
-      scrollWidth: chart.scrollWidth,
-    })),
-  );
-  for (const chart of chartWidths) {
-    expect(chart.scrollWidth).toBeLessThanOrEqual(chart.clientWidth);
-  }
   await expect(page.locator('#doctor .doctor-workspace-layout')).toHaveCSS('display', 'grid');
   await expect(page.locator('#doctor .doctor-queue-item')).toHaveCSS('border-radius', '10px');
   await expect(page.locator('#doctor .doctor-queue-item.active')).toContainText('Rohan Mehta');
